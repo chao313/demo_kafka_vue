@@ -20,6 +20,11 @@ export default {
     "getConsumerGroupOffsets": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupOffsets',
 
 
+    "sendForget": BASE_URL + '/ProduceController/sendForget',
+    "sendAsync": BASE_URL + '/ProduceController/sendAsync',
+    "sendSync": BASE_URL + '/ProduceController/sendSync',
+
+
 
     /*后台的URL*/
     /** 资源管理 */

@@ -62,7 +62,7 @@
                     </tbody>
                 </table>
                 <hr>
-                <h5 class="form-tit">Topic members(成员)</h5>
+                <h5 class="form-tit">Consumer members(成员)</h5>
                 <table>
                     <thead>
                     <tr>
@@ -89,6 +89,38 @@
                             <td>{{value.host}}</td>
                             <td>{{value.memberId}}</td>
                             <td>{{value.assignment.topicPartitions}}</td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+
+                <h5 class="form-tit">Consumer 消费情况(偏移量)</h5>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Topic-Partition</th>
+                        <th>offset</th>
+                        <th>leaderEpoch</th>
+                        <th>metadata</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>消费的Topic分区</th>
+                        <th>消费的offset</th>
+                        <th>水位?</th>
+                        <th>元数据</th>
+                    </tr>
+
+                    <tbody>
+                    <template v-for="(value,key,index) in consumerGroupOffsets">
+                        <tr>
+                            <td>{{index+1}}</td>
+                            <td>{{key}}</td>
+                            <td>{{value.offset}}</td>
+                            <td>{{value.leaderEpoch}}</td>
+                            <td>{{value.metadata}}</td>
                         </tr>
                     </template>
                     </tbody>
@@ -138,6 +170,13 @@
                     ],
 
                     authorizedOperations: []
+                },
+                consumerGroupOffsets: {
+                    "Test-0": {
+                        "metadata": "",
+                        "offset": 28,
+                        "leaderEpoch": 0
+                    }
                 }
             }
         },
@@ -150,6 +189,7 @@
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
             const group_id = self.$route.query && self.$route.query.group_id;
             this.getConsumerGroupDescribe(bootstrap_servers, group_id);
+            this.getConsumerGroupOffsets(bootstrap_servers, group_id);
         }
         ,
         watch: {}
@@ -189,21 +229,20 @@
 
             }
             ,
+
             /**
-             * 获取配置
-             * @param bootstrap_servers
-             * @param topic
+             *偏移量
              */
-            getTopicConfigs(bootstrap_servers, topic) {
+            getConsumerGroupOffsets(bootstrap_servers, group) {
                 let self = this;
-                self.$http.get(self.api.getTopicConfigs, {
+                self.$http.get(self.api.getConsumerGroupOffsets, {
                     params: {
                         'bootstrap.servers': bootstrap_servers,
-                        'topic': topic
+                        'group': group
                     }
                 }, function (response) {
                     if (response.code == 0) {
-                        self.configs = response.content.entries;
+                        self.consumerGroupOffsets = response.content;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -227,6 +266,7 @@
 
 
             }
+
             ,
 
             deleteByPrimaryKey(id) {

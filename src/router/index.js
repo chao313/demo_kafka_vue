@@ -27,9 +27,15 @@ const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views
 const ConsumerManagerList = r => require.ensure([], () => r(require('@/views/ConsumerManager/List')), 'ConsumerManagerList')
 const ConsumerManagerView = r => require.ensure([], () => r(require('@/views/ConsumerManager/View')), 'ConsumerManagerView')
 
+
+const ProducerManagerSendAsync = r => require.ensure([], () => r(require('@/views/ProducerManager/SendAsync')), 'ProducerManagerSendAsync')
+const ProducerManagerSendSync = r => require.ensure([], () => r(require('@/views/ProducerManager/SendSync')), 'ProducerManagerSendSync')
+const ProducerManagerSendForget = r => require.ensure([], () => r(require('@/views/ProducerManager/SendForget')), 'ProducerManagerSendForget')
+
 const ResourceManagerList = r => require.ensure([], () => r(require('@/views/ResourceManager/List')), 'ResourceManagerList')
 const ResourceManagerAdd = r => require.ensure([], () => r(require('@/views/ResourceManager/Add')), 'ResourceManagerAdd')
 const ResourceManagerView = r => require.ensure([], () => r(require('@/views/ResourceManager/View')), 'ResourceManagerView')
+
 
 /* TBlogModuleUpdate更新 */
 const TBlogModuleView = r => require.ensure([], () => r(require('@/views/TBlogModule/view')), 'TBlogModuleView')
@@ -177,6 +183,45 @@ export const constantRouterMap = [
                     title: 'Consumer细节查看'
                 },
                 hidden: true
+            }
+        ]
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: '/ProducerManagerSendSync',
+        name: 'ProducerManager',
+        meta: {
+            title: 'Producer管理'
+        },
+        noDropdown: true,
+        children: [
+            {
+                path: 'ProducerManagerSendSync',
+                component: ProducerManagerSendSync,
+                name: 'ProducerManagerSendSync',
+                meta: {
+                    title: 'Producer 同步发送'
+                },
+                hidden: false
+            },
+            {
+                path: 'ProducerManagerSendAsync',
+                component: ProducerManagerSendAsync,
+                name: 'ProducerManagerSendAsync',
+                meta: {
+                    title: 'Producer 异步发送'
+                },
+                hidden: false
+            },
+            {
+                path: 'ProducerManagerSendForget',
+                component: ProducerManagerSendForget,
+                name: 'ProducerManagerSendForget',
+                meta: {
+                    title: 'Producer 发送忘记'
+                },
+                hidden: false
             }
         ]
     },
