@@ -24,6 +24,9 @@ const TopicManagerView = r => require.ensure([], () => r(require('@/views/TopicM
 const TopicManagerEdit = r => require.ensure([], () => r(require('@/views/TopicManager/edit')), 'TopicManagerEdit')
 const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views/TopicManager/ConfigsView')), 'TopicManagerConfigsView')
 
+const ConsumerManagerList = r => require.ensure([], () => r(require('@/views/ConsumerManager/List')), 'ConsumerManagerList')
+const ConsumerManagerView = r => require.ensure([], () => r(require('@/views/ConsumerManager/View')), 'ConsumerManagerView')
+
 const ResourceManagerList = r => require.ensure([], () => r(require('@/views/ResourceManager/List')), 'ResourceManagerList')
 const ResourceManagerAdd = r => require.ensure([], () => r(require('@/views/ResourceManager/Add')), 'ResourceManagerAdd')
 const ResourceManagerView = r => require.ensure([], () => r(require('@/views/ResourceManager/View')), 'ResourceManagerView')
@@ -135,6 +138,45 @@ export const constantRouterMap = [
                     title: 'TopicConfig查询'
                 },
                 hidden: false
+            },
+            {
+                path: 'TopicManagerView',
+                component: TopicManagerView,
+                name: 'TopicManagerView',
+                meta: {
+                    title: 'Topic细节查看'
+                },
+                hidden: true
+            }
+        ]
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: '/ConsumerManagerList',
+        name: 'ConsumerManager',
+        meta: {
+            title: 'Consumer管理'
+        },
+        noDropdown: true,
+        children: [
+            {
+                path: 'ConsumerManagerList',
+                component: ConsumerManagerList,
+                name: 'ConsumerManagerList',
+                meta: {
+                    title: 'Consumer列表'
+                },
+                hidden: false
+            },
+            {
+                path: 'ConsumerManagerView',
+                component: ConsumerManagerView,
+                name: 'ConsumerManagerView',
+                meta: {
+                    title: 'Consumer细节查看'
+                },
+                hidden: true
             }
         ]
     },

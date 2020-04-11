@@ -11,6 +11,14 @@ export default {
     "addTopic": BASE_URL + '/AdminTopicController/addTopic',
     "deleteTopic": BASE_URL + '/AdminTopicController/deleteTopic',
     "getTopicConfigs": BASE_URL + '/AdminTopicController/getTopicConfigs',
+    "getTopicDescription": BASE_URL + '/AdminTopicController/getTopicDescription',
+
+
+    "getConsumerGroups": BASE_URL + '/AdminConsumerGroupController/getConsumerGroups',
+    "getConsumerGroupDescribe": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupDescribe',
+    "deleteConsumerGroup": BASE_URL + '/AdminConsumerGroupController/deleteConsumerGroup',
+    "getConsumerGroupOffsets": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupOffsets',
+
 
 
     /*后台的URL*/

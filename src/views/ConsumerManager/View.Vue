@@ -1,113 +1,94 @@
 <template>
     <div class="app-container">
-        <div class="mt20">
-            <el-form :inline="true" size="mini">
-                <el-form-item label="bootstrap.servers">
-                    <!--<el-input v-model="bootstrap.servers" placeholder="请输入"></el-input>-->
-                </el-form-item>
-                <el-form-item>
-                    <!--<el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>-->
-                </el-form-item>
-            </el-form>
-        </div>
         <div class="app-list">
             <div class="app-tab">
-                <h5 class="form-tit">Topic基础信息</h5>
+                <h5 class="form-tit">Consumer基础信息</h5>
                 <table>
                     <thead>
                     <tr>
                         <th>id</th>
-                        <!--显示的字段 - 英文-->
-                        <th>name</th>
-                        <th>internal</th>
+                        <th>groupId</th>
+                        <th>state</th>
+                        <th>isSimpleConsumerGroup</th>
+                        <th>partitionAssignor</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>Topic的name</th>
-                        <th>是否是内部</th>
+                        <th>Consumer的groupId</th>
+                        <th>Consumer的状态</th>
+                        <th>Consumer是否是简单消费者</th>
+                        <th>Consumer的分区分配器</th>
                     </tr>
 
                     <tbody>
                     <tr>
                         <td>1</td>
-                        <td>{{topicDescription.name}}</td>
-                        <td>{{topicDescription.internal}}</td>
+                        <td>{{consumerInfo.groupId}}</td>
+                        <td>{{consumerInfo.state}}</td>
+                        <td>{{consumerInfo.isSimpleConsumerGroup}}</td>
+                        <td>{{consumerInfo.partitionAssignor}}</td>
                     </tr>
                     </tbody>
                 </table>
                 <hr>
-                <h5 class="form-tit">Topic partitions信息</h5>
+                <h5 class="form-tit">Consumer coordinator(均衡器)</h5>
                 <table>
                     <thead>
                     <tr>
                         <th>id</th>
-                        <!--显示的字段 - 英文-->
-                        <th>partition</th>
+                        <th>id</th>
                         <th>idString</th>
+                        <th>port</th>
                         <th>host</th>
-                        <th>id</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>Topic的Partition</th>
-                        <th>Topic的leader</th>
-                        <th>Topic的isr</th>
-                        <th>Topic的replicas</th>
+                        <th>coordinator的id</th>
+                        <th>coordinator的idString</th>
+                        <th>coordinator的端口</th>
+                        <th>coordinator的主机</th>
                     </tr>
 
                     <tbody>
-                    <template v-for="(value,index) in topicDescription.partitions">
-                        <tr>
-                            <td>{{index+1}}</td>
-                            <td>{{value.partition}}</td>
-                            <td>{{value.leader}}</td>
-                            <td>{{value.isr}}</td>
-                            <td>{{value.replicas}}</td>
-                        </tr>
-                    </template>
+                    <tr>
+                        <td>1</td>
+                        <td>{{consumerInfo.coordinator.id}}</td>
+                        <td>{{consumerInfo.coordinator.idString}}</td>
+                        <td>{{consumerInfo.coordinator.port}}</td>
+                        <td>{{consumerInfo.coordinator.host}}</td>
+                    </tr>
                     </tbody>
                 </table>
                 <hr>
-                <h5 class="form-tit">Topic 配置信息</h5>
+                <h5 class="form-tit">Topic members(成员)</h5>
                 <table>
                     <thead>
                     <tr>
                         <th>id</th>
-                        <th>source</th>
-                        <th>isReadOnly</th>
-                        <th>isSensitive</th>
-                        <th>name</th>
-                        <th>value</th>
-                        <th>操作</th>
+                        <th>client.id</th>
+                        <th>host</th>
+                        <th>memberId</th>
+                        <th>assignment</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>配置来源</th>
-                        <th>是否只读</th>
-                        <th>是否敏感</th>
-                        <th>配置key</th>
-                        <th>配置value</th>
-                        <th>操作</th>
+                        <th>Consumer的客户端id</th>
+                        <th>Consumer的主机</th>
+                        <th>Consumer的成员id</th>
+                        <th>assignment(被分配的分区)</th>
                     </tr>
 
                     <tbody>
-                    <template v-for="(value,key,index) in configs">
+                    <template v-for="(value,index) in consumerInfo.members">
                         <tr>
                             <td>{{index+1}}</td>
-                            <td>{{value.source}}</td>
-                            <td>{{value.isReadOnly}}</td>
-                            <td>{{value.isSensitive}}</td>
-                            <td>{{value.name}}</td>
-                            <td>{{value.value}}</td>
-                            <td>
-                                <span @click="routerToView(value.name)">查看</span>
-                                <span v-if="value.isReadOnly == false"
-                                      @click="routerToEdit(value.name,value.value)">编辑</span>
-                                <span v-if="value.isReadOnly == false" @click="deleteByPrimaryKey(value.name)">删除</span>
-                            </td>
+                            <td>{{value.clientId}}</td>
+                            <td>{{value.host}}</td>
+                            <td>{{value.memberId}}</td>
+                            <td>{{value.assignment.topicPartitions}}</td>
                         </tr>
                     </template>
                     </tbody>
@@ -128,72 +109,63 @@
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
-                topicDescription: {
-                    partitions: [
+                consumerInfo: {
+                    groupId: "consumer-test33",
+                    state: "STABLE",
+                    isSimpleConsumerGroup: false,
+                    partitionAssignor: "range",
+                    coordinator: {
+                        "port": 9092,
+                        "idString": "0",
+                        "host": "192.168.0.105",
+                        "id": 0
+                    },
+                    members: [
                         {
-                            "leader": {
-                                "port": 9092,
-                                "idString": "0",
-                                "host": "192.168.0.105",
-                                "id": 0
-                            },
-                            "partition": 0,
-                            "replicas": [
-                                {
-                                    "port": 9092,
-                                    "idString": "0",
-                                    "host": "192.168.0.105",
-                                    "id": 0
-                                }
-                            ],
-                            "isr": [
-                                {
-                                    "port": 9092,
-                                    "idString": "0",
-                                    "host": "192.168.0.105",
-                                    "id": 0
-                                }
-                            ]
+                            clientId: "consumer-2",
+                            host: "/192.168.0.100",
+                            memberId: "consumer-2-ad6a63cb-b3cb-4fee-a5dd-fdc421d44a2e",
+                            assignment: {
+                                topicPartitions: [
+                                    {
+                                        "partition": 0,
+                                        "topic": "Test",
+                                        "hash": 2604147
+                                    }
+                                ]
+                            }
                         }
                     ],
-                    internal: false,
-                    name: "Test",
+
                     authorizedOperations: []
-                },
-                configs: {
-                    first: {
-                        isReadOnly: true,
-                        isSensitive: false,
-                        synonyms: [],
-                        name: "advertised.host.name",
-                        source: "DEFAULT_CONFIG"
-                    }
                 }
             }
         },
         mounted() {
             let self = this;
-        },
+        }
+        ,
         created() {
             let self = this;
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
-            const topic = self.$route.query && self.$route.query.topic;
-            this.getTopicDescription(bootstrap_servers, topic);
-            this.getTopicConfigs(bootstrap_servers, topic);
-        },
-        watch: {},
+            const group_id = self.$route.query && self.$route.query.group_id;
+            this.getConsumerGroupDescribe(bootstrap_servers, group_id);
+        }
+        ,
+        watch: {}
+        ,
         methods: {
-            getTopicDescription(bootstrap_servers, topic) {
+            getConsumerGroupDescribe(bootstrap_servers, group_id) {
                 let self = this;
-                self.$http.get(self.api.getTopicDescription, {
+                self.$http.get(self.api.getConsumerGroupDescribe, {
                     params: {
                         'bootstrap.servers': bootstrap_servers,
-                        'topic': topic
+                        'group': group_id
                     }
                 }, function (response) {
 
                     if (response.code == 0) {
-                        self.clusterInfo = response.content;
+                        self.consumerInfo = response.content;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -215,7 +187,8 @@
                     });
                 })
 
-            },
+            }
+            ,
             /**
              * 获取配置
              * @param bootstrap_servers
@@ -253,7 +226,8 @@
                 })
 
 
-            },
+            }
+            ,
 
             deleteByPrimaryKey(id) {
                 let self = this;
@@ -305,26 +279,31 @@
                     )
 
                 })
-            },
+            }
+            ,
             routerToView(id) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "id=" + id + "";
                 window.open("#/TBlogModuleView" + "?" + queryStr, '_self');
-            },
+            }
+            ,
             routerToEdit(id) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "id=" + id + "";
                 //跳转携带参数
                 window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
-            },
+            }
+            ,
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');
-            },
+            }
+            ,
             searchEvent() {
                 this.queryBase();
-            },
+            }
+            ,
             searchRest() {
                 let self = this;
                 self.search.id = '';

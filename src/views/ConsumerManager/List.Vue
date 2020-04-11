@@ -16,27 +16,26 @@
                     <thead>
                     <tr>
                         <th>id</th>
-                        <th>name</th>
-                        <th>internal</th>
+                        <th>group.id</th>
+                        <th>isSimpleConsumerGroup</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>Topic的name</th>
-                        <th>Topic是否是内部</th>
+                        <th>consumer的group.id</th>
+                        <th>是否是简单消费者</th>
                         <th>操作</th>
                     </tr>
 
                     <tbody>
-                    <tr v-for="(info,index) in topicsResults">
+                    <tr v-for="(info,index) in consumers">
                         <td>{{index+1}}</td>
-                        <td>{{info.name}}</td>
-                        <td>{{info.internal}}</td>
+                        <td>{{info.groupId}}</td>
+                        <td>{{info.isSimpleConsumerGroup}}</td>
                         <td>
-                            <span @click="routerToView(bootstrap.servers,info.name)">查看</span>
-                            <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
-                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>
+                            <span @click="routerToView(bootstrap.servers,info.groupId)">查看</span>
+                            <span @click="deleteConsumerGroup(bootstrap.servers,info.groupId)">删除</span>
                         </td>
                     </tr>
                     </tbody>
@@ -67,49 +66,30 @@
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
-                clusterInfo: {
-                    controller: {
-                        port: 9092,
-                        idString: "xx",
-                        host: "192.168.0.105",
-                        id: 0
-                    },
-                    nodes: [
-                        {
-                            port: 9092,
-                            idString: "xx",
-                            host: "192.168.0.105",
-                            id: 0
-                        }
-                    ],
-                    clusterId: "1",
-                    authorizedOperations: []
-                },
-                topicsResults: [
-                    {
-                        "internal": false,
-                        "name": "Test"
-                    }
-                ]
+                consumers:
+                    [{
+                        groupId: "KMOffsetCache-localhost.localdomain",
+                        isSimpleConsumerGroup: false
+                    }]
             }
         },
         mounted() {
             let self = this;
         },
         created() {
-            this.queryBase();
+            this.getConsumerGroups();
         },
         watch: {},
         methods: {//获取具体的配置
-            queryBase() {
+            getConsumerGroups() {
                 let self = this;
-                self.$http.get(self.api.getTopicsResults, {
+                self.$http.get(self.api.getConsumerGroups, {
                     params: {
                         'bootstrap.servers': self.bootstrap.servers
                     }
                 }, function (response) {
                     if (response.code == 0) {
-                        self.topicsResults = response.content;
+                        self.consumers = response.content.all.value;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -133,18 +113,18 @@
 
 
             },
-            deleteByTopicName(bootstrap_servers, topic) {
+            deleteConsumerGroup(bootstrap_servers, group) {
                 let self = this;
                 this.$confirm('是否删除该条数据？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     center: true
                 }).then(() => {
-                    self.$http.delete(self.api.deleteTopic
+                    self.$http.delete(self.api.deleteConsumerGroup
                         , {
                             params: {
                                 'bootstrap.servers': bootstrap_servers,
-                                'topic': topic
+                                'group': group
                             }
                         },
                         function (response) {
@@ -155,7 +135,7 @@
                                         message: '删除成功',
                                         duration: 2000
                                     });
-                                    self.queryBase();
+                                    self.getConsumerGroups();
                                 } else {
                                     self.$message({
                                         type: 'warning',
@@ -185,11 +165,11 @@
 
                 })
             },
-            routerToView(bootstrap_servers, topic) {
+            routerToView(bootstrap_servers, group_id) {
                 //跳转携带参数
                 let queryStr = "";
-                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/TopicManagerView" + "?" + queryStr, '_self');
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerView" + "?" + queryStr, '_self');
             },
             routerToEdit(id) {
                 //跳转携带参数
@@ -202,18 +182,7 @@
                 window.open("#/TBlogModuleAdd", '_self');
             },
             searchEvent() {
-                this.queryBase();
-            },
-            searchRest() {
-                let self = this;
-                self.search.id = '';
-                self.search.title = '';
-                self.search.img = '';
-                self.search.time = '';
-                self.search.type = '';
-                self.search.lookSum = '';
-                self.search.content = '';
-                this.queryBase();
+                this.getConsumerGroups();
             }
 
         }
