@@ -14,6 +14,9 @@
                     <el-form-item label="partition:">
                         <el-input v-model="postForm.partition" maxlength="100"></el-input>
                     </el-form-item>
+                    <el-form-item label="timestamp:">
+                        <el-input v-model="postForm.timestamp" maxlength="100"></el-input>
+                    </el-form-item>
                     <el-form-item label="key:">
                         <el-input v-model="postForm.key" maxlength="100"></el-input>
                     </el-form-item>
@@ -24,7 +27,7 @@
             </el-form>
         </section>
         <div class="mt40 ml40">
-            <el-button type="primary" @click="submitEditForm()">确定send</el-button>
+            <el-button type="primary" @click="submitEditForm()">确定同步send</el-button>
             <el-button type="primary" class="el-button-search" @click="routerToList()">返回列表</el-button>
         </div>
         <div class="app-container">
@@ -45,8 +48,8 @@
                             <th>msg偏移量</th>
                             <th>msg所在的topic</th>
                             <th>msg所在的partition</th>
-                            <th>msg的key序列话大小</th>
-                            <th>msg的value序列话大小</th>
+                            <th>msg的key序列化大小</th>
+                            <th>msg的value序列化大小</th>
                             <th>msg的时间(创建/接收)</th>
                         </tr>
 
@@ -86,6 +89,7 @@
                         },
                     topic: 'Test',
                     partition: '',
+                    timestamp: '',
                     key: 'key',
                     value: 'value',
                 },
@@ -119,6 +123,7 @@
                 params.append('bootstrap.servers', self.postForm.bootstrap.servers);
                 params.append('topic', self.postForm.topic);
                 params.append('partition', self.postForm.partition);
+                params.append('timestamp', self.postForm.timestamp);
                 params.append('key', self.postForm.key);
                 params.append('value', self.postForm.value);
 

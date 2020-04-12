@@ -32,6 +32,15 @@ const ProducerManagerSendAsync = r => require.ensure([], () => r(require('@/view
 const ProducerManagerSendSync = r => require.ensure([], () => r(require('@/views/ProducerManager/SendSync')), 'ProducerManagerSendSync')
 const ProducerManagerSendForget = r => require.ensure([], () => r(require('@/views/ProducerManager/SendForget')), 'ProducerManagerSendForget')
 
+/**
+ * 消费端
+ */
+const ConsumerAdd = r => require.ensure([], () => r(require('@/views/Consumer/Add')), 'ConsumerAdd')
+const TopicPartitionOffsetList = r => require.ensure([], () => r(require('@/views/Consumer/TopicPartitionOffsetList')), 'TopicPartitionOffsetList')
+const TopicPartitionOffsetDetail = r => require.ensure([], () => r(require('@/views/Consumer/TopicPartitionOffsetDetail')), 'TopicPartitionOffsetDetail')
+const ConsumerEdit = r => require.ensure([], () => r(require('@/views/Consumer/edit')), 'ConsumerEdit')
+
+
 const ResourceManagerList = r => require.ensure([], () => r(require('@/views/ResourceManager/List')), 'ResourceManagerList')
 const ResourceManagerAdd = r => require.ensure([], () => r(require('@/views/ResourceManager/Add')), 'ResourceManagerAdd')
 const ResourceManagerView = r => require.ensure([], () => r(require('@/views/ResourceManager/View')), 'ResourceManagerView')
@@ -53,7 +62,7 @@ export const constantRouterMap = [
         redirect: '/ClusterManagerInfo',
         name: 'clusterManager',
         meta: {
-            title: 'Cluster管理'
+            title: 'Cluster管理(Admin)'
         },
         noDropdown: true,
         children: [
@@ -62,7 +71,7 @@ export const constantRouterMap = [
                 component: ClusterManagerInfo,
                 name: 'ClusterManagerInfo',
                 meta: {
-                    title: 'Cluster集群信息'
+                    title: 'Cluster集群信息(Admin)'
                 },
                 hidden: false
             },
@@ -71,7 +80,7 @@ export const constantRouterMap = [
                 component: ClusterManagerInfo,
                 name: 'ClusterManagerInfo',
                 meta: {
-                    title: 'Cluster集群列表'
+                    title: 'Cluster集群列表(Admin)'
                 },
                 hidden: false
             }
@@ -83,7 +92,7 @@ export const constantRouterMap = [
         redirect: '/BrokerManagerList',
         name: 'BrokerManager',
         meta: {
-            title: 'Broker管理'
+            title: 'Broker管理(Admin)'
         },
         noDropdown: true,
         children: [
@@ -92,7 +101,7 @@ export const constantRouterMap = [
                 component: BrokerManagerInfoView,
                 name: 'BrokerManagerInfoView',
                 meta: {
-                    title: 'Brokerinfo'
+                    title: 'Brokerinfo(Admin)'
                 },
                 hidden: false
             },
@@ -101,7 +110,7 @@ export const constantRouterMap = [
                 component: BrokerManagerConfigsView,
                 name: 'BrokerManagerConfigsView',
                 meta: {
-                    title: 'Broker配置信息'
+                    title: 'Broker配置信息(Admin)'
                 },
                 hidden: false
             }
@@ -114,7 +123,7 @@ export const constantRouterMap = [
         redirect: '/TopicManagerList',
         name: 'TopicManager',
         meta: {
-            title: 'Topic管理'
+            title: 'Topic管理(Admin)'
         },
         noDropdown: true,
         children: [
@@ -123,7 +132,7 @@ export const constantRouterMap = [
                 component: TopicManagerList,
                 name: 'TopicManagerList',
                 meta: {
-                    title: 'Topic列表'
+                    title: 'Topic列表(Admin)'
                 },
                 hidden: false
             },
@@ -132,7 +141,7 @@ export const constantRouterMap = [
                 component: TopicManagerAdd,
                 name: 'TopicManagerAdd',
                 meta: {
-                    title: 'Topic添加'
+                    title: 'Topic添加(Admin)'
                 },
                 hidden: false
             },
@@ -141,7 +150,7 @@ export const constantRouterMap = [
                 component: TopicManagerConfigsView,
                 name: 'TopicManagerConfigsView',
                 meta: {
-                    title: 'TopicConfig查询'
+                    title: 'TopicConfig查询(Admin)'
                 },
                 hidden: false
             },
@@ -150,7 +159,7 @@ export const constantRouterMap = [
                 component: TopicManagerView,
                 name: 'TopicManagerView',
                 meta: {
-                    title: 'Topic细节查看'
+                    title: 'Topic细节查看(Admin)'
                 },
                 hidden: true
             }
@@ -162,7 +171,7 @@ export const constantRouterMap = [
         redirect: '/ConsumerManagerList',
         name: 'ConsumerManager',
         meta: {
-            title: 'Consumer管理'
+            title: 'Consumer管理(Admin)'
         },
         noDropdown: true,
         children: [
@@ -171,7 +180,7 @@ export const constantRouterMap = [
                 component: ConsumerManagerList,
                 name: 'ConsumerManagerList',
                 meta: {
-                    title: 'Consumer列表'
+                    title: 'Consumer列表(Admin)'
                 },
                 hidden: false
             },
@@ -180,7 +189,7 @@ export const constantRouterMap = [
                 component: ConsumerManagerView,
                 name: 'ConsumerManagerView',
                 meta: {
-                    title: 'Consumer细节查看'
+                    title: 'Consumer细节查看(Admin)'
                 },
                 hidden: true
             }
@@ -192,7 +201,7 @@ export const constantRouterMap = [
         redirect: '/ProducerManagerSendSync',
         name: 'ProducerManager',
         meta: {
-            title: 'Producer管理'
+            title: 'Producer端'
         },
         noDropdown: true,
         children: [
@@ -201,7 +210,7 @@ export const constantRouterMap = [
                 component: ProducerManagerSendSync,
                 name: 'ProducerManagerSendSync',
                 meta: {
-                    title: 'Producer 同步发送'
+                    title: 'Producer 同步发送(Producer)'
                 },
                 hidden: false
             },
@@ -210,7 +219,7 @@ export const constantRouterMap = [
                 component: ProducerManagerSendAsync,
                 name: 'ProducerManagerSendAsync',
                 meta: {
-                    title: 'Producer 异步发送'
+                    title: 'Producer 异步发送(Producer)'
                 },
                 hidden: false
             },
@@ -219,10 +228,61 @@ export const constantRouterMap = [
                 component: ProducerManagerSendForget,
                 name: 'ProducerManagerSendForget',
                 meta: {
-                    title: 'Producer 发送忘记'
+                    title: 'Producer 发送忘记(Producer)'
                 },
                 hidden: false
             }
+        ]
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: '/TopicPartitionOffsetList',
+        name: 'TopicPartitionOffsetList',
+        meta: {
+            title: 'Consumer端'
+        },
+        noDropdown: true,
+        children: [
+            {
+                path: 'ConsumerEdit',
+                component: ConsumerEdit,
+                name: 'ConsumerEdit',
+                meta: {
+                    title: 'ConsumerEdit'
+                },
+                hidden: false
+            }
+            ,
+            {
+                path: 'TopicPartitionOffsetList',
+                component: TopicPartitionOffsetList,
+                name: 'TopicPartitionOffsetList',
+                meta: {
+                    title: 'TopicPartitionOffsetList'
+                },
+                hidden: false
+            },
+            {
+                path: 'TopicPartitionOffsetDetail',
+                component: TopicPartitionOffsetDetail,
+                name: 'TopicPartitionOffsetDetail',
+                meta: {
+                    title: 'TopicPartitionOffsetDetail'
+                },
+                hidden: false
+            }
+            ,
+            {
+                path: 'ConsumerAdd',
+                component: ConsumerAdd,
+                name: 'ConsumerAdd',
+                meta: {
+                    title: 'ConsumerAdd'
+                },
+                hidden: false
+            }
+
         ]
     },
     {

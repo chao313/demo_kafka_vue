@@ -25,6 +25,14 @@ export default {
     "sendSync": BASE_URL + '/ProduceController/sendSync',
 
 
+    "getTopicPartitionAndRealOffset": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffset',
+    "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
+    "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
+
+
+
+
+
 
     /*后台的URL*/
     /** 资源管理 */
