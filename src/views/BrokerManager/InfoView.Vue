@@ -143,7 +143,7 @@
             let self = this;
         },
         created() {
-            this.queryBase();
+            // this.queryBase();
         },
         watch: {},
         methods: {//获取具体的配置

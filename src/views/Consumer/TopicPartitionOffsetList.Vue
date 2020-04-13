@@ -3,7 +3,11 @@
         <div class="mt20">
             <el-form :inline="true" size="mini">
                 <el-form-item label="bootstrap.servers">
-                    <el-input v-model="bootstrap.servers" placeholder="请输入"></el-input>
+                    <el-select v-model="bootstrap.servers" placeholder="请输入kafka地址:">
+                        <el-option v-for="(item,index) in bootstrap_servers" :key="item" :label="index"
+                                   :value="item">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
@@ -74,6 +78,9 @@
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
+                bootstrap_servers: {
+                    "home": "192.168.0.105:9092"
+                },
                 topicPartitionAndRealOffset: [{
                     "topic": "Test",
                     "partition": 0,
@@ -89,11 +96,37 @@
             let self = this;
         },
         created() {
-            this.getTopicPartitionAndRealOffset();
+            // this.getTopicPartitionAndRealOffset();
+            this.getKafkaBootstrapServers();
         },
         watch: {},
         methods: {//获取具体的配置
-            getTopicPartitionAndRealOffset() {
+            getKafkaBootstrapServers() {
+                let self = this;
+                self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
+                    if (response.code == 0) {
+                        self.bootstrap_servers = response.content;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+            }, getTopicPartitionAndRealOffset() {
                 let self = this;
                 self.$http.get(self.api.getTopicPartitionAndRealOffset, {
                     params: {
@@ -194,7 +227,7 @@
                 window.open("#/TBlogModuleAdd", '_self');
             },
             searchEvent() {
-                this.getConsumerGroups();
+                this.getTopicPartitionAndRealOffset();
             }
 
         }

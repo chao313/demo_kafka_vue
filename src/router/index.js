@@ -82,7 +82,7 @@ export const constantRouterMap = [
                 meta: {
                     title: 'Cluster集群列表(Admin)'
                 },
-                hidden: false
+                hidden: true
             }
         ]
     },
@@ -96,15 +96,7 @@ export const constantRouterMap = [
         },
         noDropdown: true,
         children: [
-            {
-                path: 'BrokerManagerInfoView',
-                component: BrokerManagerInfoView,
-                name: 'BrokerManagerInfoView',
-                meta: {
-                    title: 'Brokerinfo(Admin)'
-                },
-                hidden: false
-            },
+
             {
                 path: 'BrokerManagerConfigsView',
                 component: BrokerManagerConfigsView,
@@ -113,6 +105,14 @@ export const constantRouterMap = [
                     title: 'Broker配置信息(Admin)'
                 },
                 hidden: false
+            }, {
+                path: 'BrokerManagerInfoView',
+                component: BrokerManagerInfoView,
+                name: 'BrokerManagerInfoView',
+                meta: {
+                    title: 'Brokerinfo(Admin)'
+                },
+                hidden: true
             }
         ]
     },
@@ -245,16 +245,6 @@ export const constantRouterMap = [
         noDropdown: true,
         children: [
             {
-                path: 'ConsumerEdit',
-                component: ConsumerEdit,
-                name: 'ConsumerEdit',
-                meta: {
-                    title: 'ConsumerEdit'
-                },
-                hidden: false
-            }
-            ,
-            {
                 path: 'TopicPartitionOffsetList',
                 component: TopicPartitionOffsetList,
                 name: 'TopicPartitionOffsetList',
@@ -264,13 +254,23 @@ export const constantRouterMap = [
                 hidden: false
             },
             {
+                path: 'ConsumerEdit',
+                component: ConsumerEdit,
+                name: 'ConsumerEdit',
+                meta: {
+                    title: 'ConsumerEdit'
+                },
+                hidden: true
+            }
+            ,
+            {
                 path: 'TopicPartitionOffsetDetail',
                 component: TopicPartitionOffsetDetail,
                 name: 'TopicPartitionOffsetDetail',
                 meta: {
                     title: 'TopicPartitionOffsetDetail'
                 },
-                hidden: false
+                hidden: true
             }
             ,
             {

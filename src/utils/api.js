@@ -30,6 +30,9 @@ export default {
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
 
 
+    "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',
+
+
 
 
 

@@ -5,8 +5,12 @@
             <el-form :model="postForm" :rules="rules" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">
                 <div class="mt30 ml15">
-                    <el-form-item label="bootstrap.servers:">
-                        <el-input v-model="postForm.bootstrap.servers" maxlength="100"></el-input>
+                    <el-form-item label="bootstrap.servers">
+                        <el-select v-model="postForm.bootstrap.servers" placeholder="请输入kafka地址:">
+                            <el-option v-for="(item,index) in bootstrap_servers" :key="item" :label="index"
+                                       :value="item">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="topic:">
                         <el-input v-model="postForm.topic" maxlength="100"></el-input>
@@ -43,11 +47,14 @@
                     topic: '',
                     numPartitions: 1,
                     replicationFactor: 1
+                },
+                bootstrap_servers: {
+                    "home": "192.168.0.105:9092"
                 }
             }
         },
         created() {
-
+            this.getKafkaBootstrapServers();
         },
         watch: {},
         methods: {
@@ -88,9 +95,41 @@
                                 duration: 2000
                             });
                         }
+                    }else {
+                        self.$message({
+                            type: 'warning',
+                            message: response.msg,
+                            duration: 2000
+                        });
                     }
                 }, function (response) {
                     //失败回调
+                })
+            },
+            getKafkaBootstrapServers() {
+                let self = this;
+                self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
+                    if (response.code == 0) {
+                        self.bootstrap_servers = response.content;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
                 })
             },
             routerToList() {
