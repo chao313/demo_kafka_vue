@@ -386,6 +386,7 @@
                             message: 'seek成功',
                             duration: 2000
                         });
+
                     } else {
                         self.$message({
                             type: 'error',
@@ -400,7 +401,8 @@
                         message: '请求异常',
                         duration: 1000
                     });
-                })
+                });
+                self.getConsumerGroupOffsetsAndRealOffset(self.bootstrap.servers, self.group_id);
 
 
             }
