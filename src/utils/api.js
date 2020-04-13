@@ -25,12 +25,16 @@ export default {
     "sendSync": BASE_URL + '/ProduceController/sendSync',
 
 
-    "getTopicPartitionAndRealOffset": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffset',
+    "getTopicPartitionAndRealOffsetList": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetList',
     "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
+    "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
 
 
     "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',
+
+
+    "getConsumerGroupOffsetsAndRealOffset": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffset',
 
 
 

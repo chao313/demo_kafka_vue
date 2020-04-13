@@ -9,6 +9,9 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="topic_pattern">
+                    <el-input v-model="topic_pattern" placeholder="请输入topic_pattern"></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
                 </el-form-item>
@@ -78,6 +81,7 @@
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
+                topic_pattern: '.*',
                 bootstrap_servers: {
                     "home": "192.168.0.105:9092"
                 },
@@ -96,7 +100,7 @@
             let self = this;
         },
         created() {
-            // this.getTopicPartitionAndRealOffset();
+            // this.getTopicPartitionAndRealOffsetList();
             this.getKafkaBootstrapServers();
         },
         watch: {},
@@ -126,11 +130,12 @@
                         duration: 1000
                     });
                 })
-            }, getTopicPartitionAndRealOffset() {
+            }, getTopicPartitionAndRealOffsetList() {
                 let self = this;
-                self.$http.get(self.api.getTopicPartitionAndRealOffset, {
+                self.$http.get(self.api.getTopicPartitionAndRealOffsetList, {
                     params: {
-                        'bootstrap.servers': self.bootstrap.servers
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'topic_pattern': self.topic_pattern
                     }
                 }, function (response) {
                     if (response.code == 0) {
@@ -227,7 +232,7 @@
                 window.open("#/TBlogModuleAdd", '_self');
             },
             searchEvent() {
-                this.getTopicPartitionAndRealOffset();
+                this.getTopicPartitionAndRealOffsetList();
             }
 
         }

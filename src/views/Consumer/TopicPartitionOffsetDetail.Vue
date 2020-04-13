@@ -335,6 +335,24 @@
 
                     if (response.code == 0) {
                         self.topicPartitionAndRealOffsetDetail = response.content;
+
+                        response.content.lastTenConsumerRecords.forEach(record => {
+                            record.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(record.timestamp))
+                        });
+                        /**
+                         * 最早的
+                         */
+                        response.content.earliestConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.earliestConsumerRecord.timestamp));
+                        /**
+                         * 最新的
+                         */
+                        response.content.lastConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.lastConsumerRecord.timestamp));
+
+                        /**
+                         * 为了查询
+                         */
+                        self.search.startOffset = response.content.earliestConsumerRecord.offset;
+                        self.search.endOffset = response.content.lastConsumerRecord.offset;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -374,7 +392,11 @@
                 }, function (response) {
 
                     if (response.code == 0) {
-                        self.consumerRecords = response.content;
+                        self.consumerRecords = [];
+                        response.content.forEach(record => {
+                            record.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(record.timestamp))
+                            self.consumerRecords.push(record);
+                        });
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -431,6 +453,44 @@
                 self.search.lookSum = '';
                 self.search.content = '';
                 this.queryBase();
+            },
+            dateFormat(fmt, date) {
+                let ret;
+                const opt = {
+                    "Y+": date.getFullYear().toString(),        // 年
+                    "m+": (date.getMonth() + 1).toString(),     // 月
+                    "d+": date.getDate().toString(),            // 日
+                    "H+": date.getHours().toString(),           // 时
+                    "M+": date.getMinutes().toString(),         // 分
+                    "S+": date.getSeconds().toString(),         // 秒
+                    "s+": this.dealMilliseconds(date.getMilliseconds().toString())          // 毫秒
+                    // 有其他格式化字符需求可以继续添加，必须转化成字符串
+                };
+                for (let k in opt) {
+                    ret = new RegExp("(" + k + ")").exec(fmt);
+                    if (ret) {
+                        fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+                    }
+                    ;
+                }
+                ;
+                return fmt;
+            },
+            /**
+             * 补全长度
+             * @param milliseconds
+             * @returns {*}
+             */
+            dealMilliseconds(milliseconds) {
+                if (milliseconds.length == 1) {
+                    return milliseconds + '00';
+                } else if (milliseconds.length == 2) {
+                    return milliseconds + '0';
+                } else {
+                    return milliseconds;
+                }
+
+
             }
 
         }

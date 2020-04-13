@@ -41,10 +41,10 @@ module.exports = {
 
     build: {
         // Template for index.html
-        index: path.resolve(__dirname, '../obtainweb/index.html'),
+        index: path.resolve(__dirname, '../demo_kafka_vue/index.html'),
 
         // Paths
-        assetsRoot: path.resolve(__dirname, '../obtainweb'),
+        assetsRoot: path.resolve(__dirname, '../demo_kafka_vue'),
         assetsSubDirectory: 'static',
         assetsPublicPath: './',
 
