@@ -105,6 +105,8 @@
         },
         created() {
             // this.queryBase();
+            let self = this;
+            self.topicsResults = [];
             this.getKafkaBootstrapServers();
         },
         watch: {},

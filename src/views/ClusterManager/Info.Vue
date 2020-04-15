@@ -144,6 +144,10 @@
         },
         created() {
             // this.queryBase();
+            let self = this;
+            self.clusterInfo.controller={};
+            self.clusterInfo.nodes={};
+            self.clusterInfo.clusterId='';
             this.getKafkaBootstrapServers();
         },
         watch: {},

@@ -82,6 +82,7 @@
         },
         mounted() {
             let self = this;
+            self.consumers = [];
         },
         created() {
             // this.getConsumerGroups();

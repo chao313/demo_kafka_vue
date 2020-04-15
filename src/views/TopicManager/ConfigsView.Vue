@@ -105,6 +105,8 @@
             let self = this;
         },
         created() {
+            let self = this;
+            self.configs = {};
             // this.queryBase();
             this.getKafkaBootstrapServers();
         },

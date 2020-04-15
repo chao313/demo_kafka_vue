@@ -101,6 +101,8 @@
         },
         created() {
             // this.getTopicPartitionAndRealOffsetList();
+            let self = this;
+            self.topicPartitionAndRealOffset = [];
             this.getKafkaBootstrapServers();
         },
         watch: {},

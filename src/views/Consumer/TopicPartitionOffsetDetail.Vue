@@ -300,7 +300,7 @@
                     "serializedValueSize": 5,
                     "value": "value",
                     "key": "key",
-                    "timestamp": 1586598100479
+                    "timestamp": 15865981004791
                 }
                 ]
             }
@@ -311,6 +311,8 @@
         ,
         created() {
             let self = this;
+            self.consumerRecords = [];
+            self.topicPartitionAndRealOffsetDetail = [];
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
             const topic = self.$route.query && self.$route.query.topic;
             const partition = self.$route.query && self.$route.query.partition;
@@ -318,6 +320,7 @@
             self.search.topic = topic;
             self.search.partition = partition;
             this.getTopicPartitionAndRealOffsetDetail(bootstrap_servers, topic, partition);
+
         }
         ,
         watch: {}
@@ -342,17 +345,22 @@
                         /**
                          * 最早的
                          */
-                        response.content.earliestConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.earliestConsumerRecord.timestamp));
+                        if (response.content.earliestConsumerRecord) {
+                            response.content.earliestConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.earliestConsumerRecord.timestamp));
+                            self.search.startOffset = response.content.earliestConsumerRecord.offset;
+                        }
                         /**
                          * 最新的
                          */
-                        response.content.lastConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.lastConsumerRecord.timestamp));
-
+                        if (response.content.lastConsumerRecord) {
+                            response.content.lastConsumerRecord.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.lastConsumerRecord.timestamp));
+                            self.search.endOffset = response.content.lastConsumerRecord.offset;
+                        }
                         /**
                          * 为了查询
                          */
-                        self.search.startOffset = response.content.earliestConsumerRecord.offset;
-                        self.search.endOffset = response.content.lastConsumerRecord.offset;
+
+
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -392,7 +400,6 @@
                 }, function (response) {
 
                     if (response.code == 0) {
-                        self.consumerRecords = [];
                         response.content.forEach(record => {
                             record.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(record.timestamp))
                             self.consumerRecords.push(record);

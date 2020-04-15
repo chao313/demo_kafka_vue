@@ -123,6 +123,8 @@
         },
         created() {
             // this.queryBase();
+            let  self = this;
+            self.configs ={};
             this.getKafkaBootstrapServers();
         },
         watch: {},
