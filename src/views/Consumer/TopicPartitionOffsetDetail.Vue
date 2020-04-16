@@ -389,6 +389,7 @@
              */
             getRecordByTopicPartitionOffset() {
                 let self = this;
+                self.consumerRecords = [];
                 self.$http.get(self.api.getRecordByTopicPartitionOffset, {
                     params: {
                         'bootstrap.servers': self.search.bootstrap.servers,
