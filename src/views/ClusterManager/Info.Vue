@@ -32,9 +32,11 @@
 
                     <tbody>
                     <tr>
-                        <td>1</td>
-                        <!--显示的字段 - 具体数据-->
-                        <td>{{clusterInfo.clusterId}}</td>
+                        <template v-if="clusterInfo.clusterId">
+                            <td>1</td>
+                            <!--显示的字段 - 具体数据-->
+                            <td>{{clusterInfo.clusterId}}</td>
+                        </template>
                     </tr>
                     </tbody>
                 </table>
@@ -49,6 +51,7 @@
                         <th>idString</th>
                         <th>host</th>
                         <th>id</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
@@ -57,15 +60,22 @@
                         <th>idString</th>
                         <th>host</th>
                         <th>id</th>
+                        <th>操作</th>
                     </tr>
 
                     <tbody>
                     <tr>
-                        <td>1</td>
-                        <td>{{clusterInfo.controller.port}}</td>
-                        <td>{{clusterInfo.controller.idString}}</td>
-                        <td>{{clusterInfo.controller.host}}</td>
-                        <td>{{clusterInfo.controller.id}}</td>
+                        <template v-if="clusterInfo.controller.host">
+                            <td>1</td>
+                            <td>{{clusterInfo.controller.port}}</td>
+                            <td>{{clusterInfo.controller.idString}}</td>
+                            <td>{{clusterInfo.controller.host}}</td>
+                            <td>{{clusterInfo.controller.id}}</td>
+                            <td>
+                                <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
+                                <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
+                            </td>
+                        </template>
                     </tr>
                     </tbody>
                 </table>
@@ -80,6 +90,7 @@
                         <th>idString</th>
                         <th>host</th>
                         <th>id</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
@@ -88,16 +99,23 @@
                         <th>idString</th>
                         <th>host</th>
                         <th>id</th>
+                        <th>操作</th>
                     </tr>
 
                     <tbody>
-                    <tr v-for="(info,index) in clusterInfo.nodes">
-                        <td>{{index+1}}</td>
-                        <td>{{info.port}}</td>
-                        <td>{{info.idString}}</td>
-                        <td>{{info.host}}</td>
-                        <td>{{info.id}}</td>
-                    </tr>
+                    <template v-if="clusterInfo.nodes">
+                        <tr v-for="(info,index) in clusterInfo.nodes">
+                            <td>{{index+1}}</td>
+                            <td>{{info.port}}</td>
+                            <td>{{info.idString}}</td>
+                            <td>{{info.host}}</td>
+                            <td>{{info.id}}</td>
+                            <td>
+                                <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
+                                <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
+                            </td>
+                        </tr>
+                    </template>
                     </tbody>
                 </table>
             </div>
@@ -108,7 +126,6 @@
 </template>
 
 <script>
-    import {getPreDay} from '@/utils/index.js'
 
     export default {
         data() {
@@ -145,9 +162,11 @@
         created() {
             // this.queryBase();
             let self = this;
-            self.clusterInfo.controller={};
-            self.clusterInfo.nodes={};
-            self.clusterInfo.clusterId='';
+            self.clusterInfo.controller = {};
+            self.clusterInfo.nodes = {};
+            self.clusterInfo.clusterId = '';
+            self.bootstrap = {};
+            self.bootstrap_servers = {};
             this.getKafkaBootstrapServers();
         },
         watch: {},
@@ -261,11 +280,17 @@
 
                 })
             },
-            routerToView(id) {
+            routerToConfigsView(bootstrap_servers) {
                 //跳转携带参数
                 let queryStr = "";
-                queryStr = queryStr + "id=" + id + "";
-                window.open("#/TBlogModuleView" + "?" + queryStr, '_self');
+                queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/BrokerManagerConfigsView" + "?" + queryStr, '_blank');
+            },
+            routerToTopicManagerList(bootstrap_servers) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicManagerList" + "?" + queryStr, '_blank');
             },
             routerToEdit(id) {
                 //跳转携带参数

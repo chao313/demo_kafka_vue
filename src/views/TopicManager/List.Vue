@@ -108,6 +108,15 @@
             let self = this;
             self.topicsResults = [];
             this.getKafkaBootstrapServers();
+
+            /**
+             * 处理外界参数
+             */
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            if (bootstrap_servers) {
+                self.bootstrap.servers = bootstrap_servers;
+                self.queryBase();
+            }
         },
         watch: {},
         methods: {//获取具体的配置
