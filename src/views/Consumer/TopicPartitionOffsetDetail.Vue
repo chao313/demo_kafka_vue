@@ -176,10 +176,22 @@
                             <el-input v-model="search.valueRegex" placeholder="请输入value的正则"></el-input>
                         </el-form-item>
                         <el-form-item label="timeStart">
-                            <el-input v-model="search.timeStart" placeholder="请输入time的start"></el-input>
+                            <el-date-picker
+                                    v-model="search.timeStart"
+                                    type="datetime"
+                                    format="yyyy-MM-dd hh:mm:ss"
+                                    value-format="yyyy-MM-dd hh:mm:ss"
+                                    placeholder="选择日期的start时间">
+                            </el-date-picker>
                         </el-form-item>
                         <el-form-item label="timeEnd">
-                            <el-input v-model="search.timeStart" placeholder="请输入time的end"></el-input>
+                            <el-date-picker
+                                    v-model="search.timeEnd"
+                                    type="datetime"
+                                    format="yyyy-MM-dd hh:mm:ss"
+                                    value-format="yyyy-MM-dd hh:mm:ss"
+                                    placeholder="选择日期的end时间">
+                            </el-date-picker>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
