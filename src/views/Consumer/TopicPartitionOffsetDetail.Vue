@@ -169,6 +169,18 @@
                         <el-form-item label="endOffset">
                             <el-input v-model="search.endOffset" placeholder="请输入"></el-input>
                         </el-form-item>
+                        <el-form-item label="keyRegex">
+                            <el-input v-model="search.keyRegex" placeholder="请输入key的正则"></el-input>
+                        </el-form-item>
+                        <el-form-item label="valueRegex">
+                            <el-input v-model="search.valueRegex" placeholder="请输入value的正则"></el-input>
+                        </el-form-item>
+                        <el-form-item label="timeStart">
+                            <el-input v-model="search.timeStart" placeholder="请输入time的start"></el-input>
+                        </el-form-item>
+                        <el-form-item label="timeEnd">
+                            <el-input v-model="search.timeStart" placeholder="请输入time的end"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
                         </el-form-item>
@@ -287,6 +299,11 @@
                     partition: 0,
                     startOffset: 0,
                     endOffset: 0,
+                    keyRegex: null,
+                    valueRegex: null,
+                    timeStart: null,
+                    timeEnd: null
+
                 },
                 consumerRecords: [{
                     "partition": 1,
@@ -396,7 +413,11 @@
                         'topic': self.search.topic,
                         'partition': self.search.partition,
                         'startOffset': self.search.startOffset,
-                        'endOffset': self.search.endOffset
+                        'endOffset': self.search.endOffset,
+                        'keyRegex': self.search.keyRegex,
+                        'valueRegex': self.search.valueRegex,
+                        'timeStart': self.search.timeStart,
+                        'timeEnd': self.search.timeEnd
                     }
                 }, function (response) {
 
