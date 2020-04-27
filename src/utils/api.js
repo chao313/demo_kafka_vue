@@ -29,6 +29,7 @@ export default {
     "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
+    "getRecordEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordEChartsByTopicPartitionOffset',
 
 
     "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',

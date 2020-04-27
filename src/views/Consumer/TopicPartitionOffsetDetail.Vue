@@ -160,6 +160,9 @@
                     </tbody>
                 </table>
                 <hr>
+                <h5 class="form-tit">画图</h5>
+                <div id="main" style="width: 1600px;height:400px;"></div>
+                <hr>
                 <h5 class="form-tit">获取指定offset数据</h5>
                 <div class="mt20">
                     <el-form :inline="true" size="mini">
@@ -195,6 +198,13 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
+                            <el-select v-model="search.level" placeholder="选择level:">
+                                <el-option v-for=" item in level" :key="item" :label="item"
+                                           :value="item">
+                                </el-option>
+                            </el-select>
+                            <el-button type="primary" class="el-button-search" @click="charts()">画图
+                            </el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -305,6 +315,7 @@
                     }
                     ]
                 },
+                level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS', 'MILLISECOND'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},
@@ -314,7 +325,8 @@
                     keyRegex: null,
                     valueRegex: null,
                     timeStart: null,
-                    timeEnd: null
+                    timeEnd: null,
+                    level: 'DAY'
 
                 },
                 consumerRecords: [{
@@ -532,6 +544,73 @@
                 }
 
 
+            },
+            charts() {
+                let self = this;
+                self.$http.get(self.api.getRecordEChartsByTopicPartitionOffset, {
+                    params: {
+                        'bootstrap.servers': self.search.bootstrap.servers,
+                        'topic': self.search.topic,
+                        'partition': self.search.partition,
+                        'startOffset': self.search.startOffset,
+                        'endOffset': self.search.endOffset,
+                        'keyRegex': self.search.keyRegex,
+                        'valueRegex': self.search.valueRegex,
+                        'timeStart': self.search.timeStart,
+                        'timeEnd': self.search.timeEnd,
+                        'level': self.search.level,
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        var echarts = require('echarts');
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChart = echarts.init(document.getElementById('main'));
+                        // 绘制图表
+                        myChart.setOption(response.content);
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
+                // var echarts = require('echarts');
+                //
+                //
+                // // 基于准备好的dom，初始化echarts实例
+                // var myChart = echarts.init(document.getElementById('main'));
+                // // 绘制图表
+                // myChart.setOption({
+                //     title: {
+                //         text: 'ECharts 入门示例'
+                //     },
+                //     tooltip: {},
+                //     xAxis: {
+                //         data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+                //     },
+                //     yAxis: {},
+                //     series: [{
+                //         name: '销量',
+                //         type: 'bar',
+                //         data: [5, 20, 36, 10, 10, 20]
+                //     }]
+                // });
             }
 
         }
