@@ -41,7 +41,8 @@ export default {
     /**
      * wind专用
      */
-    "sendFile": BASE_URL + '/WindController/sendFile',
+    "sendOriginalFile": BASE_URL + '/WindController/sendOriginalFile',
+    "sendBusinessFile": BASE_URL + '/WindController/sendBusinessFile',
 
 
 

@@ -1,6 +1,6 @@
 <template>
     <div class="app-form mt20 ml40">
-        <h5 class="form-tit">资源添加</h5>
+        <h5 class="form-tit">原始zip包</h5>
         <section>
             <el-form :model="postForm" :rules="rules" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">
@@ -25,7 +25,7 @@
                             class="upload-file"
                             multiple
                             drag
-                            :limit=10
+                            accept=".zip"
                             :before-upload="beforeUpload"
                             :auto-upload="false"
                             :action="postForm.action"
@@ -42,7 +42,46 @@
             <el-button type="primary" @click="submitForm()">确定</el-button>
             <el-button @click="resetForm('postForm')">取消</el-button>
         </div>
+        <div class="app-container">
+            <div class="app-list">
+                <div class="app-tab">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>offset</th>
+                            <th>topic</th>
+                            <th>partition</th>
+                            <th>serializedKeySize</th>
+                            <th>serializedValueSize</th>
+                            <th>timestamp</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <th>msg偏移量</th>
+                            <th>msg所在的topic</th>
+                            <th>msg所在的partition</th>
+                            <th>msg的key序列化大小</th>
+                            <th>msg的value序列化大小</th>
+                            <th>msg的时间(创建/接收)</th>
+                        </tr>
+
+                        <tbody>
+                        <tr v-for="(info,index) in msgReturnData">
+                            <td>{{info.offset}}</td>
+                            <td>{{info.topic}}</td>
+                            <td>{{info.partition}}</td>
+                            <td>{{info.serializedKeySize}}</td>
+                            <td>{{info.serializedValueSize}}</td>
+                            <td>{{info.timestamp}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
+
 
 </template>
 <script>
@@ -70,14 +109,24 @@
                     partition: '',
                     policyID: '',
                     files: [],
-                    file: null,
+                    file: '',
                     action: ''
-                }
+                },
+                msgReturnData: [
+                    {
+                        offset: 0,
+                        timestamp: '2020-04-11 23:17:17.783',
+                        serializedKeySize: 3,
+                        serializedValueSize: 5,
+                        partition: 1,
+                        topic: "Test"
+                    }]
             };
         },
         created() {
             let self = this;
             self.bootstrap_servers = {};
+            self.msgReturnData = [];
             this.getKafkaBootstrapServers();
         },
         watch: {},
@@ -179,14 +228,20 @@
 
                 var form = new FormData();
 
-                form.append('file', self.postForm.file.raw);
+                self.postForm.files.forEach(file => form.append('files', file.raw, file.raw.name));
 
                 let config = {
                     headers: {'Content-Type': 'multipart/form-data'}
                 }
-                self.$http.post(self.api.sendFile + param, form, config, function (response) {
+                self.$http.post(self.api.sendOriginalFile + param, form, config, function (response) {
                     if (response.code == 0) {
-                        console.log(response)
+
+                        response.content.forEach(value => {
+                            value.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(value.timestamp));
+                            self.msgReturnData.push(value);
+                        });
+
+                        self.msgReturnData = self.sortByKey(self.msgReturnData, 'timestamp');
                         self.$message({
                             type: 'success',
                             message: 'send成功',
@@ -210,7 +265,53 @@
                 })
 
 
+            },
+            sortByKey(array, key) {
+                return array.sort(function (a, b) {
+                    var x = a[key];
+                    var y = b[key];
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                })
+            },
+            dateFormat(fmt, date) {
+                let ret;
+                const opt = {
+                    "Y+": date.getFullYear().toString(),        // 年
+                    "m+": (date.getMonth() + 1).toString(),     // 月
+                    "d+": date.getDate().toString(),            // 日
+                    "H+": date.getHours().toString(),           // 时
+                    "M+": date.getMinutes().toString(),         // 分
+                    "S+": date.getSeconds().toString(),         // 秒
+                    "s+": this.dealMilliseconds(date.getMilliseconds().toString())          // 毫秒
+                    // 有其他格式化字符需求可以继续添加，必须转化成字符串
+                };
+                for (let k in opt) {
+                    ret = new RegExp("(" + k + ")").exec(fmt);
+                    if (ret) {
+                        fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+                    }
+                    ;
+                }
+                ;
+                return fmt;
+            },
+            /**
+             * 补全长度
+             * @param milliseconds
+             * @returns {*}
+             */
+            dealMilliseconds(milliseconds) {
+                if (milliseconds.length == 1) {
+                    return milliseconds + '00';
+                } else if (milliseconds.length == 2) {
+                    return milliseconds + '0';
+                } else {
+                    return milliseconds;
+                }
+
+
             }
+
         }
     }
 </script>
