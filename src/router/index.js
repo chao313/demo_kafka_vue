@@ -46,6 +46,11 @@ const ResourceManagerAdd = r => require.ensure([], () => r(require('@/views/Reso
 const ResourceManagerView = r => require.ensure([], () => r(require('@/views/ResourceManager/View')), 'ResourceManagerView')
 
 
+const WindManagerOriginal = r => require.ensure([], () => r(require('@/views/WindManager/Original')), 'WindManagerOriginal')
+const WindManagerBusiness = r => require.ensure([], () => r(require('@/views/WindManager/Business')), 'WindManagerBusiness')
+const WindManagerView = r => require.ensure([], () => r(require('@/views/WindManager/View')), 'WindManagerView')
+const WindManagerList = r => require.ensure([], () => r(require('@/views/WindManager/List')), 'WindManagerList')
+
 /* TBlogModuleUpdate更新 */
 const TBlogModuleView = r => require.ensure([], () => r(require('@/views/TBlogModule/view')), 'TBlogModuleView')
 /* TBlogModuleEdit编辑 */
@@ -288,6 +293,35 @@ export const constantRouterMap = [
     {
         path: '',
         component: Layout,
+        redirect: '/WindManagerOriginal',
+        name: 'WindManagerOriginal',
+        meta: {
+            title: 'Wind管理'
+        },
+        noDropdown: true,
+        children: [
+            {
+                path: 'WindManagerOriginal',
+                component: WindManagerOriginal,
+                name: 'WindManagerOriginal',
+                meta: {
+                    title: '原始'
+                },
+                hidden: false
+            }, {
+                path: 'WindManagerBusiness',
+                component: WindManagerBusiness,
+                name: 'WindManagerBusiness',
+                meta: {
+                    title: '业务'
+                },
+                hidden: false
+            }
+        ]
+    },
+    {
+        path: '',
+        component: Layout,
         redirect: '/ResourceManagerList',
         name: 'resourceManager',
         meta: {
@@ -323,6 +357,7 @@ export const constantRouterMap = [
             }
         ]
     },
+
     {
         path: '',
         component: Layout,

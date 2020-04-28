@@ -38,6 +38,12 @@ export default {
     "getConsumerGroupOffsetsAndRealOffset": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffset',
 
 
+    /**
+     * wind专用
+     */
+    "sendFile": BASE_URL + '/WindController/sendFile',
+
+
 
 
 

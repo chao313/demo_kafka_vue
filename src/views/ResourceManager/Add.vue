@@ -14,7 +14,7 @@
                     <el-upload
                             class="upload-file"
                             drag
-                            :limit=1
+                            :limit=10
                             :action="doUploadUrl"
                             :data="doUploadData"
                             :before-upload="beforeUpload"
