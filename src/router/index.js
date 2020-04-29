@@ -26,6 +26,8 @@ const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views
 
 const ConsumerManagerList = r => require.ensure([], () => r(require('@/views/ConsumerManager/List')), 'ConsumerManagerList')
 const ConsumerManagerView = r => require.ensure([], () => r(require('@/views/ConsumerManager/View')), 'ConsumerManagerView')
+const ConsumerManagerSeek = r => require.ensure([], () => r(require('@/views/ConsumerManager/Seek')), 'ConsumerManagerSeek')
+const ConsumerManagerOffsetView = r => require.ensure([], () => r(require('@/views/ConsumerManager/OffsetView')), 'ConsumerManagerOffsetView')
 
 
 const ProducerManagerSendAsync = r => require.ensure([], () => r(require('@/views/ProducerManager/SendAsync')), 'ProducerManagerSendAsync')
@@ -195,6 +197,24 @@ export const constantRouterMap = [
                 name: 'ConsumerManagerView',
                 meta: {
                     title: 'Consumer细节查看(Admin)'
+                },
+                hidden: true
+            },
+            {
+                path: 'ConsumerManagerSeek',
+                component: ConsumerManagerSeek,
+                name: 'ConsumerManagerSeek',
+                meta: {
+                    title: 'Consumers的Seek'
+                },
+                hidden: true
+            },
+            {
+                path: 'ConsumerManagerOffsetView',
+                component: ConsumerManagerOffsetView,
+                name: 'ConsumerManagerOffsetView',
+                meta: {
+                    title: 'Consumers的Offset'
                 },
                 hidden: true
             }

@@ -22,6 +22,8 @@
                         <th>id</th>
                         <th>group.id</th>
                         <th>isSimpleConsumerGroup</th>
+                        <th>members</th>
+                        <th>status</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -29,6 +31,8 @@
                         <th>序号</th>
                         <th>consumer的group.id</th>
                         <th>是否是简单消费者</th>
+                        <th>成员数量</th>
+                        <th>消费者状态</th>
                         <th>操作</th>
                     </tr>
 
@@ -37,8 +41,18 @@
                         <td>{{index+1}}</td>
                         <td>{{info.groupId}}</td>
                         <td>{{info.isSimpleConsumerGroup}}</td>
+                        <td>{{info.members}}</td>
+                        <td>{{info.state}}</td>
                         <td>
-                            <span @click="routerToView(bootstrap.servers,info.groupId)">查看</span>
+                            <span @click="routerToView(bootstrap.servers,info.groupId)">消费者详情</span>
+                            <span @click="routerToOffsetView(bootstrap.servers,info.groupId)">Offset详情</span>
+                            <template v-if="info.state!='EMPTY'">
+                                <span @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">
+                                    <span class="red">seek</span></span>
+                            </template>
+                            <template v-else>
+                                <span class="redSpan" @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">seek</span>
+                            </template>
                             <span @click="deleteConsumerGroup(bootstrap.servers,info.groupId)">删除</span>
                         </td>
                     </tr>
@@ -75,8 +89,10 @@
                 },
                 consumers:
                     [{
-                        groupId: "KMOffsetCache-localhost.localdomain",
-                        isSimpleConsumerGroup: false
+                        "groupId": "consumer",
+                        "members": '',
+                        "state": "EMPTY",
+                        "isSimpleConsumerGroup": false
                     }]
             }
         },
@@ -98,7 +114,16 @@
                     }
                 }, function (response) {
                     if (response.code == 0) {
-                        self.consumers = response.content.all.value;
+                        self.consumers = [];
+                        response.content.forEach(value => {
+                            let vo = {};
+                            vo['groupId'] = value.groupId;
+                            vo.members = value.members.length;
+                            vo.state = value.state;
+                            vo.isSimpleConsumerGroup = value.isSimpleConsumerGroup;
+                            self.consumers.push(vo);
+                        })
+
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -206,12 +231,27 @@
                 queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/ConsumerManagerView" + "?" + queryStr, '_self');
             },
-            routerToEdit(id) {
+            routerToSeek(bootstrap_servers, group_id, state) {
+                let self = this;
+                if (state !== 'EMPTY') {
+                    self.$message({
+                        type: 'warning',
+                        message: '消费者状态不为EMPTY，无法seek',
+                        duration: 3000
+                    });
+                    return;
+                }
                 //跳转携带参数
                 let queryStr = "";
-                queryStr = queryStr + "id=" + id + "";
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerSeek" + "?" + queryStr, '_blank');
+            },
+            routerToOffsetView(bootstrap_servers, group_id) {
                 //跳转携带参数
-                window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
+                let queryStr = "";
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                //跳转携带参数
+                window.open("#/ConsumerManagerOffsetView" + "?" + queryStr, '_blank');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');
@@ -243,5 +283,14 @@
             color: #888;
         }
 
+        redSpan {
+            color: #b21f2d;
+        }
+
+    }
+
+    .red {
+        color: #b21f2d !important;
+        /*font-size: 100px;*/
     }
 </style>
