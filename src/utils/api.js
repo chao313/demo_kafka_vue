@@ -30,12 +30,14 @@ export default {
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
     "getRecordEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordEChartsByTopicPartitionOffset',
+    "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',
 
 
     "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',
 
 
     "getConsumerGroupOffsetsAndRealOffset": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffset',
+    "getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition',
 
 
     /**

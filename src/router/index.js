@@ -24,9 +24,13 @@ const TopicManagerView = r => require.ensure([], () => r(require('@/views/TopicM
 const TopicManagerEdit = r => require.ensure([], () => r(require('@/views/TopicManager/edit')), 'TopicManagerEdit')
 const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views/TopicManager/ConfigsView')), 'TopicManagerConfigsView')
 
+/**
+ * 消费者
+ */
 const ConsumerManagerList = r => require.ensure([], () => r(require('@/views/ConsumerManager/List')), 'ConsumerManagerList')
 const ConsumerManagerView = r => require.ensure([], () => r(require('@/views/ConsumerManager/View')), 'ConsumerManagerView')
-const ConsumerManagerSeek = r => require.ensure([], () => r(require('@/views/ConsumerManager/Seek')), 'ConsumerManagerSeek')
+const ConsumerManagerSeekList = r => require.ensure([], () => r(require('@/views/ConsumerManager/SeekList')), 'ConsumerManagerSeekList')
+const ConsumerManagerSeekAndView = r => require.ensure([], () => r(require('@/views/ConsumerManager/SeekAndView')), 'ConsumerManagerSeekAndView')
 const ConsumerManagerOffsetView = r => require.ensure([], () => r(require('@/views/ConsumerManager/OffsetView')), 'ConsumerManagerOffsetView')
 
 
@@ -201,11 +205,11 @@ export const constantRouterMap = [
                 hidden: true
             },
             {
-                path: 'ConsumerManagerSeek',
-                component: ConsumerManagerSeek,
-                name: 'ConsumerManagerSeek',
+                path: 'ConsumerManagerSeekList',
+                component: ConsumerManagerSeekList,
+                name: 'ConsumerManagerSeekList',
                 meta: {
-                    title: 'Consumers的Seek'
+                    title: 'Consumers的SeekList'
                 },
                 hidden: true
             },
@@ -215,6 +219,15 @@ export const constantRouterMap = [
                 name: 'ConsumerManagerOffsetView',
                 meta: {
                     title: 'Consumers的Offset'
+                },
+                hidden: true
+            },
+            {
+                path: 'ConsumerManagerSeekAndView',
+                component: ConsumerManagerSeekAndView,
+                name: 'ConsumerManagerSeekAndView',
+                meta: {
+                    title: 'Consumers的Offset和查看'
                 },
                 hidden: true
             }

@@ -244,7 +244,7 @@
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/ConsumerManagerSeek" + "?" + queryStr, '_blank');
+                window.open("#/ConsumerManagerSeekList" + "?" + queryStr, '_blank');
             },
             routerToOffsetView(bootstrap_servers, group_id) {
                 //跳转携带参数

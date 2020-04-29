@@ -56,6 +56,7 @@
                             </td>
                             <td>
                                 <span @click="updatePartitionToOffset(value.topic,value.partition,value.seekOffset)">执行seek</span>
+                                <span @click="routerToSeekAndView(value.topic,value.partition)">查看&执行seek</span>
                             </td>
                         </tr>
                     </template>
@@ -195,6 +196,13 @@
                     });
                 });
                 self.getConsumerGroupOffsetsAndRealOffset(self.bootstrap.servers, self.group_id);
+            },
+            routerToSeekAndView(topic, partition) {
+                //跳转携带参数
+                let queryStr = "";
+                let self = this;
+                queryStr = queryStr + "group_id=" + self.group_id + "&topic=" + topic + "&partition=" + partition + "&bootstrap_servers=" + self.bootstrap.servers + "";
+                window.open("#/ConsumerManagerSeekAndView" + "?" + queryStr, '_blank');
             }
 
         }
