@@ -2,7 +2,7 @@
     <div class="app-container">
         <div class="app-list">
             <div class="app-tab">
-                <h5 class="form-tit">Consumer偏移量挑拨</h5>
+                <h5 class="form-tit">Partition 的简单查看（不可以过滤，不可以查看内容）</h5>
                 <hr>
                 <div class="mt20">
                     <el-form :inline="true">
@@ -10,12 +10,6 @@
                             <el-input v-model="bootstrap.servers"
                                       maxlength="100"
                                       :style="{width:text(bootstrap.servers)}"
-                                      :disabled="true"></el-input>
-                        </el-form-item>
-                        <el-form-item label="group_id">
-                            <el-input v-model="group_id"
-                                      maxlength="100"
-                                      :style="{width:text(group_id)}"
                                       :disabled="true"></el-input>
                         </el-form-item>
                         <el-form-item label="topic">
@@ -72,42 +66,27 @@
                     <tr>
                         <th>id</th>
                         <th>Topic-Partition</th>
-                        <th>offset</th>
                         <th>startOffset</th>
                         <th>endOffset</th>
                         <th>effectOffset</th>
-                        <th>设置偏移量</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
                         <th>消费的Topic分区</th>
-                        <th>消费的offset</th>
                         <th>最早有效的offset</th>
                         <th>最新的offset</th>
-                        <th>有效的offset数量</th>
-                        <th>设置偏移量</th>
-                        <th>操作</th>
+                        <th>有效的offset</th>
                     </tr>
 
                     <tbody>
-                    <template v-for="(value,key,index) in consumerGroupOffsetsAndRealOffset">
+                    <template v-if="partitionEffectOffset.topic">
                         <tr>
-                            <td>{{index+1}}</td>
-                            <td>{{key}}</td>
-                            <td>{{value.offsetAndMetadata.offset}}</td>
-                            <td>{{value.startOffset}}</td>
-                            <td>{{value.endOffset}}</td>
-                            <td>{{value.endOffset - value.startOffset}}</td>
-                            <td>
-                                <el-form :inline="true" size="mini">
-                                    <el-input v-model="value.seekOffset" placeholder="请输入offset"></el-input>
-                                </el-form>
-                            </td>
-                            <td>
-                                <span @click="updatePartitionToOffset(value.topic,value.partition,value.seekOffset)">执行seek</span>
-                            </td>
+                            <td>1</td>
+                            <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
+                            <td>{{partitionEffectOffset.earliestOffset}}</td>
+                            <td>{{partitionEffectOffset.lastOffset}}</td>
+                            <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
                         </tr>
                     </template>
                     </tbody>
@@ -134,22 +113,13 @@
                 bootstrap: {
                     servers: ''
                 },
-                group_id: '',
                 topic: '',
                 partition: '',
-                consumerGroupOffsetsAndRealOffset: {
-                    "Test-3": {
-                        seekOffset: '',
-                        "endOffset": 7,
-                        "startOffset": 0,
-                        "partition": 3,
-                        "topic": "Test",
-                        "offsetAndMetadata": {
-                            "metadata": "",
-                            "offset": 3,
-                            "leaderEpoch": 0
-                        }
-                    }
+                partitionEffectOffset: {
+                    earliestOffset: 59556,
+                    lastOffset: 68870,
+                    partition: 0,
+                    topic: null
                 },
                 level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS', 'MILLISECOND'],
                 search: {
@@ -182,36 +152,33 @@
         created() {
             let self = this;
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
-            const group_id = self.$route.query && self.$route.query.group_id;
             const topic = self.$route.query && self.$route.query.topic;
             const partition = self.$route.query && self.$route.query.partition;
             console.log(self.$route.query)
             self.bootstrap.servers = bootstrap_servers;
             self.search.bootstrap.servers = bootstrap_servers;
-            self.group_id = group_id;
             self.topic = topic;
             self.search.topic = topic;
             self.partition = partition;
-            this.getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition(bootstrap_servers, group_id, topic, partition);
+            self.partitionEffectOffset = {};
+            this.getTopicPartitionEffectOffset(bootstrap_servers, topic, partition);
         }
         ,
         watch: {}
         ,
         methods: {
-
-            getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition(bootstrap_servers, group_id, topic, partition) {
+            getTopicPartitionEffectOffset(bootstrap_servers, topic, partition) {
                 let self = this;
-                self.$http.get(self.api.getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition, {
+                self.$http.get(self.api.getTopicPartitionEffectOffset, {
                     params: {
                         'bootstrap.servers': bootstrap_servers,
-                        'group': group_id,
                         'topic': topic,
                         'partition': partition
                     }
                 }, function (response) {
 
                     if (response.code == 0) {
-                        self.consumerGroupOffsetsAndRealOffset = response.content;
+                        self.partitionEffectOffset = response.content;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -235,44 +202,6 @@
 
             }
             ,
-            /**
-             *设置偏移量
-             */
-            updatePartitionToOffset(topic, partition, seekOffset) {
-                let self = this;
-                self.$http.get(self.api.updatePartitionToOffset, {
-                    params: {
-                        'bootstrap.servers': self.bootstrap.servers,
-                        'group.id': self.group_id,
-                        'topic': topic,
-                        'partition': partition,
-                        'seekOffset': seekOffset
-                    }
-                }, function (response) {
-                    if (response.code == 0) {
-                        self.$message({
-                            type: 'success',
-                            message: 'seek成功',
-                            duration: 2000
-                        });
-                        self.getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition(self.bootstrap.servers, self.group_id, topic, partition);
-                    } else {
-                        self.$message({
-                            type: 'error',
-                            message: response.msg,
-                            duration: 2000
-                        });
-                    }
-                }, function (response) {
-                    //失败回调
-                    self.$message({
-                        type: 'warning',
-                        message: '请求异常',
-                        duration: 1000
-                    });
-                });
-                self.getConsumerGroupOffsetsAndRealOffset(self.bootstrap.servers, self.group_id);
-            },
             charts() {
                 let self = this;
                 self.$http.get(self.api.getRecordSimpleEChartsByTopicPartitionOffset, {

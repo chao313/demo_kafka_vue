@@ -30,7 +30,8 @@ export default {
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
     "getRecordEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordEChartsByTopicPartitionOffset',
-    "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',
+    "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',//简单柱状图
+    "getRecordLineEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordLineEChartsByTopicPartitionOffset',//折线图
 
 
     "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',
@@ -41,14 +42,14 @@ export default {
 
 
     /**
+     * ConsumeNoGroupController
+     */
+    "getTopicPartitionEffectOffset": BASE_URL + '/ConsumeNoGroupController/getTopicPartitionEffectOffset',
+    /**
      * wind专用
      */
     "sendOriginalFile": BASE_URL + '/WindController/sendOriginalFile',
     "sendBusinessFile": BASE_URL + '/WindController/sendBusinessFile',
-
-
-
-
 
 
     /*后台的URL*/

@@ -38,9 +38,9 @@
                         <td>{{info.name}}</td>
                         <td>{{info.internal}}</td>
                         <td>
-                            <span @click="routerToView(bootstrap.servers,info.name)">查看</span>
                             <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
-                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>
+                            <span @click="routerToView(bootstrap.servers,info.name)">配置查看</span>
+<!--                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>-->
                         </td>
                     </tr>
                     </tbody>

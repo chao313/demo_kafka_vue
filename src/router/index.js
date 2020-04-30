@@ -23,6 +23,12 @@ const TopicManagerAdd = r => require.ensure([], () => r(require('@/views/TopicMa
 const TopicManagerView = r => require.ensure([], () => r(require('@/views/TopicManager/View')), 'TopicManagerView')
 const TopicManagerEdit = r => require.ensure([], () => r(require('@/views/TopicManager/edit')), 'TopicManagerEdit')
 const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views/TopicManager/ConfigsView')), 'TopicManagerConfigsView')
+const TopicPartitionOffsetList = r => require.ensure([], () => r(require('@/views/TopicManager/TopicPartitionOffsetList')), 'TopicPartitionOffsetList')
+const TopicPartitionOffsetDetail = r => require.ensure([], () => r(require('@/views/TopicManager/TopicPartitionOffsetDetail')), 'TopicPartitionOffsetDetail')
+/** 简单查看和 高级查看*/
+const TopicPartitionOffsetSimpleView = r => require.ensure([], () => r(require('@/views/TopicManager/SimpleView')), 'TopicPartitionOffsetSimpleView')
+const TopicPartitionOffsetSeniorView = r => require.ensure([], () => r(require('@/views/TopicManager/SeniorView')), 'TopicPartitionOffsetSeniorView')
+
 
 /**
  * 消费者
@@ -42,8 +48,6 @@ const ProducerManagerSendForget = r => require.ensure([], () => r(require('@/vie
  * 消费端
  */
 const ConsumerAdd = r => require.ensure([], () => r(require('@/views/Consumer/Add')), 'ConsumerAdd')
-const TopicPartitionOffsetList = r => require.ensure([], () => r(require('@/views/Consumer/TopicPartitionOffsetList')), 'TopicPartitionOffsetList')
-const TopicPartitionOffsetDetail = r => require.ensure([], () => r(require('@/views/Consumer/TopicPartitionOffsetDetail')), 'TopicPartitionOffsetDetail')
 const ConsumerEdit = r => require.ensure([], () => r(require('@/views/Consumer/edit')), 'ConsumerEdit')
 
 
@@ -131,13 +135,22 @@ export const constantRouterMap = [
     {
         path: '',
         component: Layout,
-        redirect: '/TopicManagerList',
-        name: 'TopicManager',
+        redirect: '/TopicPartitionOffsetList',
+        name: 'TopicPartitionOffsetList',
         meta: {
             title: 'Topic管理(Admin)'
         },
         noDropdown: true,
         children: [
+            {
+                path: 'TopicPartitionOffsetList',
+                component: TopicPartitionOffsetList,
+                name: 'TopicPartitionOffsetList',
+                meta: {
+                    title: 'TopicPartition列表'
+                },
+                hidden: false
+            },
             {
                 path: 'TopicManagerList',
                 component: TopicManagerList,
@@ -171,6 +184,33 @@ export const constantRouterMap = [
                 name: 'TopicManagerView',
                 meta: {
                     title: 'Topic细节查看(Admin)'
+                },
+                hidden: true
+            },
+            {
+                path: 'TopicPartitionOffsetDetail',
+                component: TopicPartitionOffsetDetail,
+                name: 'TopicPartitionOffsetDetail',
+                meta: {
+                    title: 'TopicPartitionOffsetDetail'
+                },
+                hidden: true
+            },
+            {
+                path: 'TopicPartitionOffsetSimpleView',
+                component: TopicPartitionOffsetSimpleView,
+                name: 'TopicPartitionOffsetSimpleView',
+                meta: {
+                    title: 'TopicPartitionOffset简单查看'
+                },
+                hidden: true
+            },
+            {
+                path: 'TopicPartitionOffsetSeniorView',
+                component: TopicPartitionOffsetSeniorView,
+                name: 'TopicPartitionOffsetSeniorView',
+                meta: {
+                    title: 'TopicPartitionOffset高级查看'
                 },
                 hidden: true
             }
@@ -275,38 +315,19 @@ export const constantRouterMap = [
     {
         path: '',
         component: Layout,
-        redirect: '/TopicPartitionOffsetList',
-        name: 'TopicPartitionOffsetList',
+        redirect: '/ConsumerEdit',
+        name: 'ConsumerEdit',
         meta: {
             title: 'Consumer端'
         },
         noDropdown: true,
         children: [
             {
-                path: 'TopicPartitionOffsetList',
-                component: TopicPartitionOffsetList,
-                name: 'TopicPartitionOffsetList',
-                meta: {
-                    title: 'TopicPartitionOffsetList'
-                },
-                hidden: false
-            },
-            {
                 path: 'ConsumerEdit',
                 component: ConsumerEdit,
                 name: 'ConsumerEdit',
                 meta: {
                     title: 'ConsumerEdit'
-                },
-                hidden: true
-            }
-            ,
-            {
-                path: 'TopicPartitionOffsetDetail',
-                component: TopicPartitionOffsetDetail,
-                name: 'TopicPartitionOffsetDetail',
-                meta: {
-                    title: 'TopicPartitionOffsetDetail'
                 },
                 hidden: true
             }

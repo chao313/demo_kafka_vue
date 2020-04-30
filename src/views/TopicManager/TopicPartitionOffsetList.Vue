@@ -51,6 +51,8 @@
                         <td>{{info.sum}}</td>
                         <td>
                             <span @click="routerToDetail(bootstrap.servers,info.topic,info.partition)">查看</span>
+                            <span @click="routerToSimpleView(bootstrap.servers,info.topic,info.partition)">简单查看</span>
+                            <span @click="routerToSeniorView(bootstrap.servers,info.topic,info.partition)">高级查看</span>
                         </td>
                     </tr>
                     </tbody>
@@ -222,6 +224,18 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
                 window.open("#/TopicPartitionOffsetDetail" + "?" + queryStr, '_self');
+            },
+            routerToSimpleView(bootstrap_servers, topic, partition) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
+                window.open("#/TopicPartitionOffsetSimpleView" + "?" + queryStr, '_self');
+            },
+            routerToSeniorView(bootstrap_servers, topic, partition) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
+                window.open("#/TopicPartitionOffsetSeniorView" + "?" + queryStr, '_self');
             },
             routerToEdit(id) {
                 //跳转携带参数
