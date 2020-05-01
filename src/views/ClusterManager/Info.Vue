@@ -74,6 +74,8 @@
                             <td>
                                 <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
                                 <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
+                                <span @click="routerToTopicPartitionOffsetList(bootstrap.servers)">查看TopicPartition</span>
+                                <span @click="routerToConsumerManagerList(bootstrap.servers)">查看Consumers</span>
                             </td>
                         </template>
                     </tr>
@@ -113,6 +115,8 @@
                             <td>
                                 <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
                                 <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
+                                <span @click="routerToTopicPartitionOffsetList(bootstrap.servers)">查看TopicPartition</span>
+                                <span @click="routerToConsumerManagerList(bootstrap.servers)">查看Consumers</span>
                             </td>
                         </tr>
                     </template>
@@ -139,7 +143,7 @@
                 clusterInfo: {
                     controller: {
                         port: 9092,
-                        idString: "xx",
+                        idString: "",
                         host: "192.168.0.105",
                         id: 0
                     },
@@ -292,26 +296,26 @@
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/BrokerManagerConfigsView" + "?" + queryStr, '_blank');
+                window.open("#/BrokerManagerConfigsView" + "?" + queryStr, '_self');
             }
             ,
             routerToTopicManagerList(bootstrap_servers) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/TopicManagerList" + "?" + queryStr, '_blank');
+                window.open("#/TopicManagerList" + "?" + queryStr, '_self');
             }
             ,
-            routerToEdit(id) {
-                //跳转携带参数
+            routerToTopicPartitionOffsetList(bootstrap_servers) {
                 let queryStr = "";
-                queryStr = queryStr + "id=" + id + "";
-                //跳转携带参数
-                window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
+                queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicPartitionOffsetList" + "?" + queryStr, '_self');
             }
             ,
-            routerToAdd() {
-                window.open("#/TBlogModuleAdd", '_self');
+            routerToConsumerManagerList(bootstrap_servers) {
+                let queryStr = "";
+                queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
             }
             ,
             searchEvent() {

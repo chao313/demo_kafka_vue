@@ -9,8 +9,8 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="topic_pattern">
-                    <el-input v-model="topic_pattern" placeholder="请输入topic_pattern"></el-input>
+                <el-form-item label="topicContain">
+                    <el-input v-model="topicContain" placeholder="请输入topicContain"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
@@ -53,6 +53,7 @@
                             <span @click="routerToDetail(bootstrap.servers,info.topic,info.partition)">查看</span>
                             <span @click="routerToSimpleView(bootstrap.servers,info.topic,info.partition)">简单查看</span>
                             <span @click="routerToSeniorView(bootstrap.servers,info.topic,info.partition)">高级查看</span>
+                            <span @click="routerToConsumerView(bootstrap.servers,info.topic)">查看消费者</span>
                         </td>
                     </tr>
                     </tbody>
@@ -73,7 +74,7 @@
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
-                topic_pattern: '.*',
+                topicContain: '',
                 bootstrap_servers: {
                     "home": "192.168.0.105:9092"
                 },
@@ -92,10 +93,15 @@
             let self = this;
         },
         created() {
-            // this.getTopicPartitionAndRealOffsetList();
             let self = this;
             self.topicPartitionAndRealOffset = [];
-            this.getKafkaBootstrapServers();
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            if (bootstrap_servers) {
+                self.bootstrap.servers = bootstrap_servers;
+                self.getTopicPartitionAndRealOffsetList();
+            } else {
+                this.getKafkaBootstrapServers();
+            }
         },
         watch: {},
         methods: {//获取具体的配置
@@ -128,12 +134,13 @@
                         duration: 1000
                     });
                 })
-            }, getTopicPartitionAndRealOffsetList() {
+            },
+            getTopicPartitionAndRealOffsetList() {
                 let self = this;
                 self.$http.get(self.api.getTopicPartitionAndRealOffsetList, {
                     params: {
                         'bootstrap.servers': self.bootstrap.servers,
-                        'topic_pattern': self.topic_pattern
+                        'topicContain': self.topicContain
                     }
                 }, function (response) {
                     if (response.code == 0) {
@@ -183,7 +190,7 @@
                                         message: '删除成功',
                                         duration: 2000
                                     });
-                                    self.getConsumerGroups();
+                                    self.getAliveConsumerGroupByTopicAndGroupNameContain();
                                 } else {
                                     self.$message({
                                         type: 'warning',
@@ -230,6 +237,12 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
                 window.open("#/TopicPartitionOffsetSeniorView" + "?" + queryStr, '_self');
+            },
+            routerToConsumerView(bootstrap_servers, topic) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
             },
             routerToEdit(id) {
                 //跳转携带参数

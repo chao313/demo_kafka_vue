@@ -9,6 +9,12 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="订阅的topic">
+                    <el-input v-model="topic" placeholder="请输入topic"></el-input>
+                </el-form-item>
+                <el-form-item label="groupNameContain">
+                    <el-input v-model="groupNameContain" placeholder="请输入groupNameContain"></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
                 </el-form-item>
@@ -71,8 +77,10 @@
     export default {
         data() {
             return {
+                topic: null,
+                groupNameContain: null,
                 bootstrap: {
-                    servers: '192.168.0.105:9092'
+                    servers: ''
                 },
                 bootstrap_servers: {
                     "home": "192.168.0.105:9092"
@@ -91,16 +99,70 @@
             self.consumers = [];
         },
         created() {
-            // this.getConsumerGroups();
-            this.getKafkaBootstrapServers();
+            let self = this;
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topic = self.$route.query && self.$route.query.topic;
+            const groupNameContain = self.$route.query && self.$route.query.groupNameContain;
+            if (bootstrap_servers) {
+                self.bootstrap.servers = bootstrap_servers;
+                self.topic = topic;
+                self.groupNameContain = groupNameContain;
+                self.searchEvent();
+            } else {
+                self.getKafkaBootstrapServers();
+            }
         },
         watch: {},
         methods: {//获取具体的配置
-            getConsumerGroups() {
+            getAliveConsumerGroupByTopicAndGroupNameContain() {
                 let self = this;
-                self.$http.get(self.api.getConsumerGroups, {
+                self.$http.get(self.api.getAliveConsumerGroupByTopicAndGroupNameContain, {
                     params: {
-                        'bootstrap.servers': self.bootstrap.servers
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'groupNameContain': self.groupNameContain
+                    }
+                }, function (response) {
+                    if (response.code == 0) {
+                        self.consumers = [];
+                        response.content.forEach(value => {
+                            let vo = {};
+                            vo['groupId'] = value.groupId;
+                            vo.members = value.members.length;
+                            vo.state = value.state;
+                            vo.isSimpleConsumerGroup = value.isSimpleConsumerGroup;
+                            self.consumers.push(vo);
+                        })
+
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
+            },
+            getConsumerGroupByTopicAndGroupNameContain() {
+                let self = this;
+                self.$http.get(self.api.getConsumerGroupByTopicAndGroupNameContain, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'topic': self.topic,
+                        'groupNameContain': self.groupNameContain
                     }
                 }, function (response) {
                     if (response.code == 0) {
@@ -159,7 +221,7 @@
                                         message: '删除成功',
                                         duration: 2000
                                     });
-                                    self.getConsumerGroups();
+                                    self.getAliveConsumerGroupByTopicAndGroupNameContain();
                                 } else {
                                     self.$message({
                                         type: 'warning',
@@ -197,7 +259,7 @@
                         for (var key in self.bootstrap_servers) {
                             self.bootstrap.servers = self.bootstrap_servers[key]
                         }
-                        self.getConsumerGroups();
+                        self.searchEvent();
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -238,20 +300,29 @@
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/ConsumerManagerSeekList" + "?" + queryStr, '_blank');
+                window.open("#/ConsumerManagerSeekList" + "?" + queryStr, '_self');
             },
             routerToOffsetView(bootstrap_servers, group_id) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
                 //跳转携带参数
-                window.open("#/ConsumerManagerOffsetView" + "?" + queryStr, '_blank');
+                window.open("#/ConsumerManagerOffsetView" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');
             },
             searchEvent() {
-                this.getConsumerGroups();
+                let self = this;
+                /**
+                 * !!! 如果不为空,调用消耗性能多的
+                 */
+                if (self.topic) {
+                    self.getConsumerGroupByTopicAndGroupNameContain();
+                } else {
+                    self.getAliveConsumerGroupByTopicAndGroupNameContain();
+                }
+
             }
 
         }

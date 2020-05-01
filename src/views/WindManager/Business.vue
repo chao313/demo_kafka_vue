@@ -1,6 +1,6 @@
 <template>
     <div class="app-form mt20 ml40">
-        <h5 class="form-tit">业务数据</h5>
+        <h5 class="form-tit">业务数据上传,可以选择多个txt,会逐条发送</h5>
         <section>
             <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">

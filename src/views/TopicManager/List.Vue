@@ -9,6 +9,9 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="topicContain">
+                    <el-input v-model="topicContain" placeholder="请输入topicContain"></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
                 </el-form-item>
@@ -38,9 +41,9 @@
                         <td>{{info.name}}</td>
                         <td>{{info.internal}}</td>
                         <td>
+                            <span @click="routerToConsumerView(bootstrap.servers,info.name)">查看消费者</span>
                             <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
                             <span @click="routerToView(bootstrap.servers,info.name)">配置查看</span>
-                            <!--                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>-->
                         </td>
                     </tr>
                     </tbody>
@@ -59,6 +62,7 @@
     export default {
         data() {
             return {
+                topicContain: '',
                 bootstrap: {
                     servers: '192.168.0.105:9092'
                 },
@@ -98,8 +102,6 @@
             // this.queryBase();
             let self = this;
             self.topicsResults = [];
-            this.getKafkaBootstrapServers();
-
             /**
              * 处理外界参数
              */
@@ -107,6 +109,8 @@
             if (bootstrap_servers) {
                 self.bootstrap.servers = bootstrap_servers;
                 self.queryBase();
+            } else {
+                this.getKafkaBootstrapServers();
             }
         },
         watch: {},
@@ -115,7 +119,8 @@
                 let self = this;
                 self.$http.get(self.api.getTopicsResults, {
                     params: {
-                        'bootstrap.servers': self.bootstrap.servers
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'topicContain': self.topicContain
                     }
                 }, function (response) {
                     if (response.code == 0) {
@@ -229,12 +234,11 @@
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/TopicManagerView" + "?" + queryStr, '_self');
             },
-            routerToEdit(id) {
+            routerToConsumerView(bootstrap_servers, topic) {
                 //跳转携带参数
                 let queryStr = "";
-                queryStr = queryStr + "id=" + id + "";
-                //跳转携带参数
-                window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');

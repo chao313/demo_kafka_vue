@@ -77,7 +77,7 @@ export const constantRouterMap = [
         redirect: '/ClusterManagerInfo',
         name: 'clusterManager',
         meta: {
-            title: 'Cluster管理(Admin)'
+            title: 'Cluster管理'
         },
         noDropdown: true,
         children: [
@@ -86,7 +86,7 @@ export const constantRouterMap = [
                 component: ClusterManagerInfo,
                 name: 'ClusterManagerInfo',
                 meta: {
-                    title: 'Cluster集群信息(Admin)'
+                    title: 'Cluster集群信息'
                 },
                 hidden: false
             },
@@ -95,7 +95,7 @@ export const constantRouterMap = [
                 component: ClusterManagerInfo,
                 name: 'ClusterManagerInfo',
                 meta: {
-                    title: 'Cluster集群列表(Admin)'
+                    title: 'Cluster集群列表'
                 },
                 hidden: true
             }
@@ -107,7 +107,7 @@ export const constantRouterMap = [
         redirect: '/BrokerManagerList',
         name: 'BrokerManager',
         meta: {
-            title: 'Broker管理(Admin)'
+            title: 'Broker管理'
         },
         noDropdown: true,
         children: [
@@ -117,7 +117,7 @@ export const constantRouterMap = [
                 component: BrokerManagerConfigsView,
                 name: 'BrokerManagerConfigsView',
                 meta: {
-                    title: 'Broker配置信息(Admin)'
+                    title: 'Broker配置信息'
                 },
                 hidden: false
             }, {
@@ -125,7 +125,7 @@ export const constantRouterMap = [
                 component: BrokerManagerInfoView,
                 name: 'BrokerManagerInfoView',
                 meta: {
-                    title: 'Brokerinfo(Admin)'
+                    title: 'Brokerinfo'
                 },
                 hidden: true
             }
@@ -138,7 +138,7 @@ export const constantRouterMap = [
         redirect: '/TopicPartitionOffsetList',
         name: 'TopicPartitionOffsetList',
         meta: {
-            title: 'Topic管理(Admin)'
+            title: 'Topic管理'
         },
         noDropdown: true,
         children: [
@@ -156,7 +156,7 @@ export const constantRouterMap = [
                 component: TopicManagerList,
                 name: 'TopicManagerList',
                 meta: {
-                    title: 'Topic列表(Admin)'
+                    title: 'Topic列表'
                 },
                 hidden: false
             },
@@ -165,7 +165,7 @@ export const constantRouterMap = [
                 component: TopicManagerAdd,
                 name: 'TopicManagerAdd',
                 meta: {
-                    title: 'Topic添加(Admin)'
+                    title: 'Topic添加'
                 },
                 hidden: false
             },
@@ -174,7 +174,7 @@ export const constantRouterMap = [
                 component: TopicManagerConfigsView,
                 name: 'TopicManagerConfigsView',
                 meta: {
-                    title: 'TopicConfig查询(Admin)'
+                    title: 'TopicConfig查询'
                 },
                 hidden: true
             },
@@ -183,7 +183,7 @@ export const constantRouterMap = [
                 component: TopicManagerView,
                 name: 'TopicManagerView',
                 meta: {
-                    title: 'Topic细节查看(Admin)'
+                    title: 'Topic细节查看'
                 },
                 hidden: true
             },
@@ -222,7 +222,7 @@ export const constantRouterMap = [
         redirect: '/ConsumerManagerList',
         name: 'ConsumerManager',
         meta: {
-            title: 'Consumer管理(Admin)'
+            title: 'Consumer管理'
         },
         noDropdown: true,
         children: [
@@ -231,7 +231,7 @@ export const constantRouterMap = [
                 component: ConsumerManagerList,
                 name: 'ConsumerManagerList',
                 meta: {
-                    title: 'Consumer列表(Admin)'
+                    title: 'Consumer列表'
                 },
                 hidden: false
             },
@@ -240,7 +240,7 @@ export const constantRouterMap = [
                 component: ConsumerManagerView,
                 name: 'ConsumerManagerView',
                 meta: {
-                    title: 'Consumer细节查看(Admin)'
+                    title: 'Consumer细节查看'
                 },
                 hidden: true
             },

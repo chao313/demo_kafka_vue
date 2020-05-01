@@ -202,7 +202,7 @@
                 let queryStr = "";
                 let self = this;
                 queryStr = queryStr + "group_id=" + self.group_id + "&topic=" + topic + "&partition=" + partition + "&bootstrap_servers=" + self.bootstrap.servers + "";
-                window.open("#/ConsumerManagerSeekAndView" + "?" + queryStr, '_blank');
+                window.open("#/ConsumerManagerSeekAndView" + "?" + queryStr, '_self');
             }
 
         }

@@ -14,7 +14,7 @@ export default {
     "getTopicDescription": BASE_URL + '/AdminTopicController/getTopicDescription',
 
 
-    "getConsumerGroups": BASE_URL + '/AdminConsumerGroupController/getConsumerGroups',
+    "getAliveConsumerGroupByTopicAndGroupNameContain": BASE_URL + '/AdminConsumerGroupController/getAliveConsumerGroupByTopicAndGroupNameContain',
     "getConsumerGroupDescribe": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupDescribe',
     "deleteConsumerGroup": BASE_URL + '/AdminConsumerGroupController/deleteConsumerGroup',
     "getConsumerGroupOffsets": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupOffsets',
@@ -39,6 +39,7 @@ export default {
 
     "getConsumerGroupOffsetsAndRealOffset": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffset',
     "getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition": BASE_URL + '/AdminController/getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition',
+    "getConsumerGroupByTopicAndGroupNameContain": BASE_URL + '/AdminController/getConsumerGroupByTopicAndGroupNameContain',
 
 
     /**

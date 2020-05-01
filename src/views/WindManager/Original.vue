@@ -1,6 +1,6 @@
 <template>
     <div class="app-form mt20 ml40">
-        <h5 class="form-tit">原始zip包</h5>
+        <h5 class="form-tit">原始zip包上传，可以选择多个zip包</h5>
         <section>
             <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">
