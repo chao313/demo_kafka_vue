@@ -57,15 +57,6 @@
                     </template>
                     </tbody>
                 </table>
-                <p v-show="total == 0" class="no-data-tip">没有找到相关数据！</p>
-                <div>
-                    <pre>{{jsonData}}</pre>
-                </div>
-            </div>
-            <div class="mt20" v-show="total > 0">
-                <el-pagination background @current-change="handleCurrentChange" :current-page.sync="currentPage"
-                               :page-size="pageSize" layout="total,prev, pager, next" :total="total">
-                </el-pagination>
             </div>
 
         </div>
@@ -125,6 +116,7 @@
             // this.queryBase();
             let self = this;
             self.configs = {};
+            self.bootstrap.servers = {};
             this.getKafkaBootstrapServers();
             /**
              * 处理外界参数
@@ -173,6 +165,10 @@
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
                     if (response.code == 0) {
                         self.bootstrap_servers = response.content;
+                        for (var key in self.bootstrap_servers) {
+                            self.bootstrap.servers = self.bootstrap_servers[key]
+                        }
+                        self.queryBase();
                         self.$message({
                             type: 'success',
                             message: '查询成功',

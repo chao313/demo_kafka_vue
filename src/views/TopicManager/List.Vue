@@ -40,22 +40,13 @@
                         <td>
                             <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
                             <span @click="routerToView(bootstrap.servers,info.name)">配置查看</span>
-<!--                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>-->
+                            <!--                            <span @click="deleteByTopicName(info.name)">编辑(配置)</span>-->
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <p v-show="total == 0" class="no-data-tip">没有找到相关数据！</p>
-                <div>
-                    <pre>{{jsonData}}</pre>
-                </div>
+                <p v-show="topicsResults.size == 0" class="no-data-tip">没有找到相关数据！</p>
             </div>
-            <div class="mt20" v-show="total > 0">
-                <el-pagination background @current-change="handleCurrentChange" :current-page.sync="currentPage"
-                               :page-size="pageSize" layout="total,prev, pager, next" :total="total">
-                </el-pagination>
-            </div>
-
         </div>
 
     </div>
@@ -207,6 +198,10 @@
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
                     if (response.code == 0) {
                         self.bootstrap_servers = response.content;
+                        for (var key in self.bootstrap_servers) {
+                            self.bootstrap.servers = self.bootstrap_servers[key]
+                        }
+                        self.queryBase();
                         self.$message({
                             type: 'success',
                             message: '查询成功',

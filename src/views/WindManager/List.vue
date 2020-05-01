@@ -62,10 +62,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <p v-show="total == 0" class="no-data-tip">没有找到相关数据！</p>
-                <div>
-                    <pre>{{jsonData}}</pre>
-                </div>
             </div>
             <div class="mt20" v-show="total > 0">
                 <el-pagination background @current-change="handleCurrentChange" :current-page.sync="currentPage"

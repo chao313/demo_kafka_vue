@@ -5,7 +5,7 @@
                 <h5 class="form-tit">Partition 的高级查看（可以过滤，可以查看内容，注意消耗性能，是逐条过滤）</h5>
                 <hr>
                 <div class="mt20">
-                    <el-form :inline="true">
+                    <el-form :inline="true" size="mini">
                         <el-form-item label="bootstrap.servers">
                             <el-input v-model="bootstrap.servers"
                                       maxlength="100"
@@ -35,12 +35,14 @@
                         <el-form-item label="endOffset">
                             <el-input v-model="search.endOffset" placeholder="请输入"></el-input>
                         </el-form-item>
+                        <br>
                         <el-form-item label="keyRegex">
                             <el-input v-model="search.keyRegex" placeholder="请输入key的正则"></el-input>
                         </el-form-item>
                         <el-form-item label="valueRegex">
                             <el-input v-model="search.valueRegex" placeholder="请输入value的正则"></el-input>
                         </el-form-item>
+                        <br>
                         <el-form-item label="timeStart">
                             <el-date-picker
                                     v-model="search.timeStart"
@@ -103,7 +105,7 @@
                 </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
-                <div id="main" style="width: 1600px;height:400px;"></div>
+                <div id="main" style="width: 1400px;height:400px;"></div>
                 <hr>
                 <hr>
                 <h5 class="form-tit">获取指定offset数据</h5>
@@ -172,7 +174,7 @@
                     partition: 0,
                     topic: null
                 },
-                level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS', 'MILLISECOND'],
+                level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},

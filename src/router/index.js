@@ -176,7 +176,7 @@ export const constantRouterMap = [
                 meta: {
                     title: 'TopicConfig查询(Admin)'
                 },
-                hidden: false
+                hidden: true
             },
             {
                 path: 'TopicManagerView',
@@ -382,6 +382,7 @@ export const constantRouterMap = [
             title: '资源管理'
         },
         noDropdown: true,
+        hidden: true,
         children: [
             {
                 path: 'ResourceManagerList',
@@ -421,6 +422,7 @@ export const constantRouterMap = [
             title: '业务管理'
         },
         noDropdown: true,
+        hidden: true,
         children: [
 
             {
@@ -450,7 +452,7 @@ export const constantRouterMap = [
                 meta: {
                     title: 'TBlogModuleList列表'
                 },
-                hidden: false
+                hidden: true
             }
             ,
             {
@@ -460,7 +462,7 @@ export const constantRouterMap = [
                 meta: {
                     title: 'TBlogModuleList列表'
                 },
-                hidden: false
+                hidden: true
             }
             ,
             {

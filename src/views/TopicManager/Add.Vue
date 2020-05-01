@@ -2,7 +2,7 @@
     <div class="app-form mt20 ml40">
         <h5 class="form-tit">注册配置编辑</h5>
         <section>
-            <el-form :model="postForm" :rules="rules" ref="postForm" label-width="180px" size="mini"
+            <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">
                 <div class="mt30 ml15">
                     <el-form-item label="bootstrap.servers">
@@ -95,7 +95,7 @@
                                 duration: 2000
                             });
                         }
-                    }else {
+                    } else {
                         self.$message({
                             type: 'warning',
                             message: response.msg,

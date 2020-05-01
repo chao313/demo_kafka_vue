@@ -160,14 +160,13 @@
             let self = this;
         },
         created() {
-            // this.queryBase();
             let self = this;
             self.clusterInfo.controller = {};
             self.clusterInfo.nodes = {};
             self.clusterInfo.clusterId = '';
             self.bootstrap = {};
             self.bootstrap_servers = {};
-            this.getKafkaBootstrapServers();
+            self.getKafkaBootstrapServers();
         },
         watch: {},
         methods: {//获取具体的配置
@@ -206,28 +205,36 @@
             getKafkaBootstrapServers() {
                 let self = this;
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
-                    if (response.code == 0) {
-                        self.bootstrap_servers = response.content;
+                        if (response.code == 0) {
+                            self.bootstrap_servers = response.content;
+                            for (var key in self.bootstrap_servers) {
+                                //随机赋值
+                                // console.log("属性：" + key + ",值 ：" + self.bootstrap_servers[key]);
+                                self.bootstrap.servers = self.bootstrap_servers[key];
+                            }
+                            self.searchEvent();
+                            self.$message({
+                                type: 'success',
+                                message: '查询成功',
+                                duration: 2000
+                            });
+                        }
+                        else {
+                            self.$message({
+                                type: 'error',
+                                message: response.msg,
+                                duration: 2000
+                            });
+                        }
+                    }, function (response) {
+                        //失败回调
                         self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 2000
-                        });
-                    } else {
-                        self.$message({
-                            type: 'error',
-                            message: response.msg,
-                            duration: 2000
+                            type: 'warning',
+                            message: '请求异常',
+                            duration: 1000
                         });
                     }
-                }, function (response) {
-                    //失败回调
-                    self.$message({
-                        type: 'warning',
-                        message: '请求异常',
-                        duration: 1000
-                    });
-                })
+                )
             },
             deleteByPrimaryKey(id) {
                 let self = this;
@@ -279,32 +286,38 @@
                     )
 
                 })
-            },
+            }
+            ,
             routerToConfigsView(bootstrap_servers) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/BrokerManagerConfigsView" + "?" + queryStr, '_blank');
-            },
+            }
+            ,
             routerToTopicManagerList(bootstrap_servers) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/TopicManagerList" + "?" + queryStr, '_blank');
-            },
+            }
+            ,
             routerToEdit(id) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "id=" + id + "";
                 //跳转携带参数
                 window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
-            },
+            }
+            ,
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');
-            },
+            }
+            ,
             searchEvent() {
                 this.queryBase();
-            },
+            }
+            ,
             searchRest() {
                 let self = this;
                 self.search.id = '';

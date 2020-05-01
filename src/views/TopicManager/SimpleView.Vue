@@ -2,10 +2,10 @@
     <div class="app-container">
         <div class="app-list">
             <div class="app-tab">
-                <h5 class="form-tit">Partition 的简单查看（不可以过滤，不可以查看内容）</h5>
+                <h5 class="form-tit">Partition 的简单查看（不可以过滤，不可以查看内容,是根据时间戳计算）</h5>
                 <hr>
                 <div class="mt20">
-                    <el-form :inline="true">
+                    <el-form :inline="true" size="mini">
                         <el-form-item label="bootstrap.servers">
                             <el-input v-model="bootstrap.servers"
                                       maxlength="100"
@@ -93,10 +93,10 @@
                 </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
-                <div id="main" style="width: 1600px;height:400px;"></div>
+                <div id="main" style="width: 1400px;height:400px;"></div>
                 <hr>
                 <h5 class="form-tit">折线图</h5>
-                <div id="line" style="width: 1600px;height:400px;"></div>
+                <div id="line" style="width: 1400px;height:400px;"></div>
             </div>
         </div>
 
@@ -121,7 +121,7 @@
                     partition: 0,
                     topic: null
                 },
-                level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS', 'MILLISECOND'],
+                level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},
