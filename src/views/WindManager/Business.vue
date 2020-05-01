@@ -188,6 +188,9 @@
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
                     if (response.code == 0) {
                         self.bootstrap_servers = response.content;
+                        for (var key in self.bootstrap_servers) {
+                            self.postForm.bootstrap.servers = self.bootstrap_servers[key]
+                        }
                         self.$message({
                             type: 'success',
                             message: '查询成功',

@@ -42,6 +42,8 @@
                         <td>{{info.internal}}</td>
                         <td>
                             <span @click="routerToConsumerView(bootstrap.servers,info.name)">查看消费者</span>
+                            <span @click="routerToTopicPartitionOffsetList(bootstrap.servers,info.name)">查看分区</span>
+                            <span @click="clearTopic(bootstrap.servers,info.name)">清空</span>
                             <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
                             <span @click="routerToView(bootstrap.servers,info.name)">配置查看</span>
                         </td>
@@ -106,8 +108,12 @@
              * 处理外界参数
              */
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topicContain = self.$route.query && self.$route.query.topicContain;
             if (bootstrap_servers) {
                 self.bootstrap.servers = bootstrap_servers;
+                if (topicContain) {
+                    self.topicContain = topicContain;
+                }
                 self.queryBase();
             } else {
                 this.getKafkaBootstrapServers();
@@ -198,6 +204,58 @@
 
                 })
             },
+            clearTopic(bootstrap_servers, topic) {
+                let self = this;
+                this.$confirm('是否清空该条数据？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    center: true
+                }).then(() => {
+                    self.$http.delete(self.api.clearTopic
+                        , {
+                            params: {
+                                'bootstrap.servers': bootstrap_servers,
+                                'topic': topic
+                            }
+                        },
+                        function (response) {
+                            if (response.code == 0) {
+                                if (response.content == true) {
+                                    self.$message({
+                                        type: 'success',
+                                        message: '清空成功',
+                                        duration: 2000
+                                    });
+                                    self.queryBase();
+                                } else {
+                                    self.$message({
+                                        type: 'warning',
+                                        message: '清空失败',
+                                        duration: 2000
+                                    });
+
+                                }
+                            } else {
+                                self.$message({
+                                    type: 'error',
+                                    message: response.msg,
+                                    duration: 2000
+                                });
+                            }
+                        },
+                        function (response) {
+                            console.log(response);
+                            //失败回调
+                            self.$message({
+                                type: 'error',
+                                message: "请求异常",
+                                duration: 2000
+                            });
+                        }
+                    )
+
+                })
+            },
             getKafkaBootstrapServers() {
                 let self = this;
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
@@ -239,6 +297,11 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
+            },
+            routerToTopicPartitionOffsetList(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topicRegex=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicPartitionOffsetList" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');

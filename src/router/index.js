@@ -143,20 +143,20 @@ export const constantRouterMap = [
         noDropdown: true,
         children: [
             {
-                path: 'TopicPartitionOffsetList',
-                component: TopicPartitionOffsetList,
-                name: 'TopicPartitionOffsetList',
-                meta: {
-                    title: 'TopicPartition列表'
-                },
-                hidden: false
-            },
-            {
                 path: 'TopicManagerList',
                 component: TopicManagerList,
                 name: 'TopicManagerList',
                 meta: {
                     title: 'Topic列表'
+                },
+                hidden: false
+            },
+            {
+                path: 'TopicPartitionOffsetList',
+                component: TopicPartitionOffsetList,
+                name: 'TopicPartitionOffsetList',
+                meta: {
+                    title: 'TopicPartition列表'
                 },
                 hidden: false
             },

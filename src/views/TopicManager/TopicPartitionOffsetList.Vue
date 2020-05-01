@@ -75,6 +75,7 @@
                     servers: '192.168.0.105:9092'
                 },
                 topicContain: '',
+                topicRegex: '',
                 bootstrap_servers: {
                     "home": "192.168.0.105:9092"
                 },
@@ -96,9 +97,19 @@
             let self = this;
             self.topicPartitionAndRealOffset = [];
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topicRegex = self.$route.query && self.$route.query.topicRegex;
             if (bootstrap_servers) {
-                self.bootstrap.servers = bootstrap_servers;
-                self.getTopicPartitionAndRealOffsetList();
+                if (topicRegex) {
+                    /**精确查询*/
+                    self.bootstrap.servers = bootstrap_servers;
+                    self.topicRegex = topicRegex;
+                    self.getTopicPartitionAndRealOffsetListByTopicRegex();
+                } else {
+                    self.bootstrap.servers = bootstrap_servers;
+                    self.getTopicPartitionAndRealOffsetList();
+                }
+
+
             } else {
                 this.getKafkaBootstrapServers();
             }
@@ -141,6 +152,39 @@
                     params: {
                         'bootstrap.servers': self.bootstrap.servers,
                         'topicContain': self.topicContain
+                    }
+                }, function (response) {
+                    if (response.code == 0) {
+                        self.topicPartitionAndRealOffset = response.content;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
+            },
+            getTopicPartitionAndRealOffsetListByTopicRegex() {
+                let self = this;
+                self.$http.get(self.api.getTopicPartitionAndRealOffsetListByTopicRegex, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'topicRegex': self.topicRegex
                     }
                 }, function (response) {
                     if (response.code == 0) {

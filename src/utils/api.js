@@ -12,6 +12,7 @@ export default {
     "deleteTopic": BASE_URL + '/AdminTopicController/deleteTopic',
     "getTopicConfigs": BASE_URL + '/AdminTopicController/getTopicConfigs',
     "getTopicDescription": BASE_URL + '/AdminTopicController/getTopicDescription',
+    "clearTopic": BASE_URL + '/AdminTopicController/clearTopic',
 
 
     "getAliveConsumerGroupByTopicAndGroupNameContain": BASE_URL + '/AdminConsumerGroupController/getAliveConsumerGroupByTopicAndGroupNameContain',
@@ -26,6 +27,7 @@ export default {
 
 
     "getTopicPartitionAndRealOffsetList": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetList',
+    "getTopicPartitionAndRealOffsetListByTopicRegex": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetListByTopicRegex',
     "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',

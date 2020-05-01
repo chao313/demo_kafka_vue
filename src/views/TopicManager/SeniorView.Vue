@@ -227,11 +227,12 @@
             const topic = self.$route.query && self.$route.query.topic;
             const partition = self.$route.query && self.$route.query.partition;
             console.log(self.$route.query)
+            self.topic = topic;
+            self.partition = partition;
             self.bootstrap.servers = bootstrap_servers;
             self.search.bootstrap.servers = bootstrap_servers;
-            self.topic = topic;
             self.search.topic = topic;
-            self.partition = partition;
+            self.search.partition = partition;
             self.partitionEffectOffset = {};
             this.getTopicPartitionEffectOffset(bootstrap_servers, topic, partition);
         }
