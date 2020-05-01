@@ -46,31 +46,32 @@
                     <thead>
                     <tr>
                         <th>id</th>
-                        <!--显示的字段 - 英文-->
-                        <th>port</th>
-                        <th>idString</th>
+                        <th>application.id</th>
                         <th>host</th>
-                        <th>id</th>
+                        <th>port</th>
+                        <th>topicSize</th>
+                        <th>consumerSize</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>端口号</th>
-                        <th>idString</th>
+                        <th>application.id</th>
                         <th>host</th>
-                        <th>id</th>
+                        <th>端口号</th>
+                        <th>topic数量</th>
+                        <th>consumer数量</th>
                         <th>操作</th>
                     </tr>
-
                     <tbody>
                     <tr>
                         <template v-if="clusterInfo.controller.host">
                             <td>1</td>
-                            <td>{{clusterInfo.controller.port}}</td>
-                            <td>{{clusterInfo.controller.idString}}</td>
-                            <td>{{clusterInfo.controller.host}}</td>
                             <td>{{clusterInfo.controller.id}}</td>
+                            <td>{{clusterInfo.controller.host}}</td>
+                            <td>{{clusterInfo.controller.port}}</td>
+                            <td>{{topicSize}}</td>
+                            <td>{{consumerSize}}</td>
                             <td>
                                 <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
                                 <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
@@ -87,37 +88,24 @@
                     <thead>
                     <tr>
                         <th>id</th>
-                        <!--显示的字段 - 英文-->
+                        <th>application.id</th>
                         <th>port</th>
-                        <th>idString</th>
                         <th>host</th>
-                        <th>id</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
-                        <th>端口号</th>
-                        <th>idString</th>
+                        <th>application.id</th>
                         <th>host</th>
-                        <th>id</th>
-                        <th>操作</th>
+                        <th>端口号</th>
                     </tr>
-
                     <tbody>
                     <template v-if="clusterInfo.nodes">
                         <tr v-for="(info,index) in clusterInfo.nodes">
                             <td>{{index+1}}</td>
-                            <td>{{info.port}}</td>
-                            <td>{{info.idString}}</td>
-                            <td>{{info.host}}</td>
                             <td>{{info.id}}</td>
-                            <td>
-                                <span @click="routerToConfigsView(bootstrap.servers)">查看Config</span>
-                                <span @click="routerToTopicManagerList(bootstrap.servers)">查看Topic</span>
-                                <span @click="routerToTopicPartitionOffsetList(bootstrap.servers)">查看TopicPartition</span>
-                                <span @click="routerToConsumerManagerList(bootstrap.servers)">查看Consumers</span>
-                            </td>
+                            <td>{{info.host}}</td>
+                            <td>{{info.port}}</td>
                         </tr>
                     </template>
                     </tbody>
@@ -140,12 +128,14 @@
                 bootstrap_servers: {
                     "home": "192.168.0.105:9092"
                 },
+                topicSize:0,
+                consumerSize:0,
                 clusterInfo: {
                     controller: {
                         port: 9092,
                         idString: "",
                         host: "192.168.0.105",
-                        id: 0
+                        id: 0,
                     },
                     nodes: [
                         {
@@ -171,6 +161,8 @@
             self.bootstrap = {};
             self.bootstrap_servers = {};
             self.getKafkaBootstrapServers();
+
+
         },
         watch: {},
         methods: {//获取具体的配置
@@ -206,6 +198,70 @@
                 })
 
             },
+            getTopicSize() {
+                let self = this;
+                self.$http.get(self.api.getTopicSize, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.topicSize = response.content;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+            },
+            getConsumerGroupSize() {
+                let self = this;
+                self.$http.get(self.api.getConsumerGroupSize, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.consumerSize = response.content;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+            },
             getKafkaBootstrapServers() {
                 let self = this;
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
@@ -217,6 +273,8 @@
                                 self.bootstrap.servers = self.bootstrap_servers[key];
                             }
                             self.searchEvent();
+                            self.getTopicSize();
+                            self.getConsumerGroupSize();
                             self.$message({
                                 type: 'success',
                                 message: '查询成功',

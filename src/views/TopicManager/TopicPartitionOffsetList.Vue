@@ -27,6 +27,7 @@
                         <th>partition</th>
                         <th>earliestOffset</th>
                         <th>lastOffset</th>
+                        <th>earliestTimestamp</th>
                         <th>sum</th>
                         <th>操作</th>
                     </tr>
@@ -38,9 +39,9 @@
                         <th>最早有效的offset</th>
                         <th>最新的offset</th>
                         <th>有效的记录数量</th>
+                        <th>最早的时间</th>
                         <th>操作</th>
                     </tr>
-
                     <tbody>
                     <tr v-for="(info,index) in topicPartitionAndRealOffset">
                         <td>{{index+1}}</td>
@@ -49,6 +50,7 @@
                         <td>{{info.earliestOffset}}</td>
                         <td>{{info.lastOffset}}</td>
                         <td>{{info.sum}}</td>
+                        <td>{{info.earliestTimestamp}}</td>
                         <td>
                             <span @click="routerToDetail(bootstrap.servers,info.topic,info.partition)">查看</span>
                             <span @click="routerToSimpleView(bootstrap.servers,info.topic,info.partition)">简单查看</span>

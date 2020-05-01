@@ -24,28 +24,39 @@
                     <tr>
                         <th>id</th>
                         <th>name</th>
-                        <th>internal</th>
+                        <th>partitions</th>
+                        <th>sum</th>
+                        <th>total</th>
+                        <th>earliestTimestamp</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
                         <th>Topic的name</th>
-                        <th>Topic是否是内部</th>
+                        <th>分区数量</th>
+                        <th>有效offset数量</th>
+                        <th>total</th>
+                        <th>最早的时间</th>
                         <th>操作</th>
                     </tr>
 
                     <tbody>
                     <tr v-for="(info,index) in topicsResults">
                         <td>{{index+1}}</td>
-                        <td>{{info.name}}</td>
-                        <td>{{info.internal}}</td>
+                        <td>{{info.topic}}</td>
+                        <td>{{info.partitions}}</td>
+                        <td>{{info.sum}}</td>
+                        <td>{{info.total}}</td>
+                        <td>{{info.earliestTimestamp}}</td>
                         <td>
-                            <span @click="routerToConsumerView(bootstrap.servers,info.name)">查看消费者</span>
-                            <span @click="routerToTopicPartitionOffsetList(bootstrap.servers,info.name)">查看分区</span>
-                            <span @click="clearTopic(bootstrap.servers,info.name)">清空</span>
-                            <span @click="deleteByTopicName(bootstrap.servers,info.name)">删除</span>
-                            <span @click="routerToView(bootstrap.servers,info.name)">配置查看</span>
+                            <span @click="routerToTopicSimpleView(bootstrap.servers,info.topic)">简单查看</span>
+                            <span @click="routerToTopicSeniorView(bootstrap.servers,info.topic)">高级查看</span>
+                            <span @click="routerToConsumerView(bootstrap.servers,info.topic)">查看消费者</span>
+                            <span @click="routerToTopicPartitionOffsetList(bootstrap.servers,info.topic)">查看分区</span>
+                            <span @click="clearTopic(bootstrap.servers,info.topic)">清空</span>
+                            <span @click="deleteByTopicName(bootstrap.servers,info.topic)">删除</span>
+                            <span @click="routerToView(bootstrap.servers,info.topic)">配置查看</span>
                         </td>
                     </tr>
                     </tbody>
@@ -91,8 +102,11 @@
                 },
                 topicsResults: [
                     {
-                        "internal": false,
-                        "name": "Test"
+                        "topic": null,
+                        "partitions": 0,
+                        "sum": 0,
+                        "total": 0,
+                        "earliestTimestamp": null
                     }
                 ]
             }
@@ -101,7 +115,6 @@
             let self = this;
         },
         created() {
-            // this.queryBase();
             let self = this;
             self.topicsResults = [];
             /**
@@ -120,10 +133,10 @@
             }
         },
         watch: {},
-        methods: {//获取具体的配置
+        methods: {
             queryBase() {
                 let self = this;
-                self.$http.get(self.api.getTopicsResults, {
+                self.$http.get(self.api.getTopicRealOffsetList, {
                     params: {
                         'bootstrap.servers': self.bootstrap.servers,
                         'topicContain': self.topicContain
@@ -302,6 +315,16 @@
                 let queryStr = "";
                 queryStr = queryStr + "topicRegex=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/TopicPartitionOffsetList" + "?" + queryStr, '_self');
+            },
+            routerToTopicSimpleView(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicSimpleView" + "?" + queryStr, '_self');
+            },
+            routerToTopicSeniorView(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicSeniorView" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');

@@ -9,9 +9,11 @@ export default {
 
     "getTopicsResults": BASE_URL + '/AdminTopicController/getTopicsResults',
     "addTopic": BASE_URL + '/AdminTopicController/addTopic',
+    "getTopicSize": BASE_URL + '/AdminTopicController/getTopicSize',
     "deleteTopic": BASE_URL + '/AdminTopicController/deleteTopic',
     "getTopicConfigs": BASE_URL + '/AdminTopicController/getTopicConfigs',
     "getTopicDescription": BASE_URL + '/AdminTopicController/getTopicDescription',
+    "getAllTopicDescription": BASE_URL + '/AdminTopicController/getAllTopicDescription',
     "clearTopic": BASE_URL + '/AdminTopicController/clearTopic',
 
 
@@ -19,6 +21,7 @@ export default {
     "getConsumerGroupDescribe": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupDescribe',
     "deleteConsumerGroup": BASE_URL + '/AdminConsumerGroupController/deleteConsumerGroup',
     "getConsumerGroupOffsets": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupOffsets',
+    "getConsumerGroupSize": BASE_URL + '/AdminConsumerGroupController/getConsumerGroupSize',
 
 
     "sendForget": BASE_URL + '/ProduceController/sendForget',
@@ -27,12 +30,14 @@ export default {
 
 
     "getTopicPartitionAndRealOffsetList": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetList',
+    "getTopicRealOffsetList": BASE_URL + '/ConsumeController/getTopicRealOffsetList',
     "getTopicPartitionAndRealOffsetListByTopicRegex": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetListByTopicRegex',
     "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
     "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
     "getRecordEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordEChartsByTopicPartitionOffset',
     "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',//简单柱状图
+    "getRecordTopicSimpleEChartsByTopicOffset": BASE_URL + '/ConsumeController/getRecordTopicSimpleEChartsByTopicOffset',//简单柱状图(Topic级别)
     "getRecordLineEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordLineEChartsByTopicPartitionOffset',//折线图
 
 
@@ -48,6 +53,7 @@ export default {
      * ConsumeNoGroupController
      */
     "getTopicPartitionEffectOffset": BASE_URL + '/ConsumeNoGroupController/getTopicPartitionEffectOffset',
+    "getTopicEffectOffset": BASE_URL + '/ConsumeNoGroupController/getTopicEffectOffset',//获取topic的有效数据
     /**
      * wind专用
      */

@@ -25,10 +25,12 @@ const TopicManagerEdit = r => require.ensure([], () => r(require('@/views/TopicM
 const TopicManagerConfigsView = r => require.ensure([], () => r(require('@/views/TopicManager/ConfigsView')), 'TopicManagerConfigsView')
 const TopicPartitionOffsetList = r => require.ensure([], () => r(require('@/views/TopicManager/TopicPartitionOffsetList')), 'TopicPartitionOffsetList')
 const TopicPartitionOffsetDetail = r => require.ensure([], () => r(require('@/views/TopicManager/TopicPartitionOffsetDetail')), 'TopicPartitionOffsetDetail')
-/** 简单查看和 高级查看*/
-const TopicPartitionOffsetSimpleView = r => require.ensure([], () => r(require('@/views/TopicManager/SimpleView')), 'TopicPartitionOffsetSimpleView')
-const TopicPartitionOffsetSeniorView = r => require.ensure([], () => r(require('@/views/TopicManager/SeniorView')), 'TopicPartitionOffsetSeniorView')
-
+/** partition 简单查看和 高级查看*/
+const TopicPartitionSimpleView = r => require.ensure([], () => r(require('@/views/TopicManager/PartitionSimpleView')), 'TopicPartitionSimpleView')
+const TopicPartitionSeniorView = r => require.ensure([], () => r(require('@/views/TopicManager/PartitionSeniorView')), 'TopicPartitionSeniorView')
+/** topic级别的 简单查看和 高级查看*/
+const TopicSimpleView = r => require.ensure([], () => r(require('@/views/TopicManager/TopicSimpleView')), 'TopicSimpleView')
+const TopicSeniorView = r => require.ensure([], () => r(require('@/views/TopicManager/TopicSeniorView')), 'TopicSeniorView')
 
 /**
  * 消费者
@@ -197,20 +199,38 @@ export const constantRouterMap = [
                 hidden: true
             },
             {
-                path: 'TopicPartitionOffsetSimpleView',
-                component: TopicPartitionOffsetSimpleView,
-                name: 'TopicPartitionOffsetSimpleView',
+                path: 'TopicPartitionSimpleView',
+                component: TopicPartitionSimpleView,
+                name: 'TopicPartitionSimpleView',
                 meta: {
                     title: 'TopicPartitionOffset简单查看'
                 },
                 hidden: true
             },
             {
-                path: 'TopicPartitionOffsetSeniorView',
-                component: TopicPartitionOffsetSeniorView,
-                name: 'TopicPartitionOffsetSeniorView',
+                path: 'TopicPartitionSeniorView',
+                component: TopicPartitionSeniorView,
+                name: 'TopicPartitionSeniorView',
                 meta: {
                     title: 'TopicPartitionOffset高级查看'
+                },
+                hidden: true
+            },
+            {
+                path: 'TopicSimpleView',
+                component: TopicSimpleView,
+                name: 'TopicSimpleView',
+                meta: {
+                    title: 'Topic简单查看'
+                },
+                hidden: true
+            },
+            {
+                path: 'TopicSeniorView',
+                component: TopicSeniorView,
+                name: 'TopicSeniorView',
+                meta: {
+                    title: 'Topic高级查看'
                 },
                 hidden: true
             }
