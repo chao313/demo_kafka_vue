@@ -19,9 +19,36 @@
                                       :disabled="true"></el-input>
                         </el-form-item>
                     </el-form>
-                </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Topic</th>
+                            <th>partitions</th>
+                            <th>sum</th>
+                            <th>total</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>消费的Topic</th>
+                            <th>分区数量</th>
+                            <th>有效offset</th>
+                            <th>total</th>
+                        </tr>
 
-                <div class="mt20">
+                        <tbody>
+                        <template v-if="topicEffectOffset.topic">
+                            <tr>
+                                <td>1</td>
+                                <td>{{topicEffectOffset.topic}}</td>
+                                <td>{{topicEffectOffset.partitions}}</td>
+                                <td>{{topicEffectOffset.sum}}</td>
+                                <td>{{topicEffectOffset.total}}</td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
                     <el-form :inline="true" size="mini">
                         <br>
                         <el-form-item label="keyRegex">
@@ -61,36 +88,7 @@
                         </el-form-item>
                     </el-form>
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Topic-Partition</th>
-                        <th>startOffset</th>
-                        <th>endOffset</th>
-                        <th>effectOffset</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>消费的Topic分区</th>
-                        <th>最早有效的offset</th>
-                        <th>最新的offset</th>
-                        <th>有效的offset</th>
-                    </tr>
 
-                    <tbody>
-                    <template v-if="partitionEffectOffset.topic">
-                        <tr>
-                            <td>1</td>
-                            <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
-                            <td>{{partitionEffectOffset.earliestOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
@@ -162,6 +160,12 @@
                     partition: 0,
                     topic: null
                 },
+                topicEffectOffset: {
+                    topic: null,
+                    partitions: 0,
+                    sum: 0,
+                    total: 0
+                },
                 level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
@@ -221,15 +225,15 @@
             self.search.topic = topic;
             self.search.partition = partition;
             self.partitionEffectOffset = {};
-            this.getTopicPartitionEffectOffset(bootstrap_servers, topic, partition);
+            this.getTopicEffectOffset(bootstrap_servers, topic, partition);
         }
         ,
         watch: {}
         ,
         methods: {
-            getTopicPartitionEffectOffset(bootstrap_servers, topic, partition) {
+            getTopicEffectOffset(bootstrap_servers, topic) {
                 let self = this;
-                self.$http.get(self.api.getTopicPartitionEffectOffset, {
+                self.$http.get(self.api.getTopicEffectOffset, {
                     params: {
                         'bootstrap.servers': bootstrap_servers,
                         'topic': topic
@@ -237,9 +241,7 @@
                 }, function (response) {
 
                     if (response.code == 0) {
-                        self.partitionEffectOffset = response.content;
-                        self.search.startOffset = self.partitionEffectOffset.earliestOffset;
-                        self.search.endOffset = self.partitionEffectOffset.lastOffset;
+                        self.topicEffectOffset = response.content;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -315,13 +317,10 @@
             ,
             charts() {
                 let self = this;
-                self.$http.get(self.api.getRecordEChartsByTopicPartitionOffset, {
+                self.$http.get(self.api.getRecordEChartsByTopic, {
                     params: {
                         'bootstrap.servers': self.search.bootstrap.servers,
                         'topic': self.search.topic,
-                        'partition': self.search.partition,
-                        'startOffset': self.search.startOffset,
-                        'endOffset': self.search.endOffset,
                         'keyRegex': self.search.keyRegex,
                         'valueRegex': self.search.valueRegex,
                         'timeStart': self.search.timeStart,
