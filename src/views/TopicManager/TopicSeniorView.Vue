@@ -18,23 +18,11 @@
                                       :style="{width:text(topic)}"
                                       :disabled="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="partition">
-                            <el-input v-model="partition"
-                                      maxlength="100"
-                                      :style="{width:text(partition)}"
-                                      :disabled="true"></el-input>
-                        </el-form-item>
                     </el-form>
                 </div>
 
                 <div class="mt20">
                     <el-form :inline="true" size="mini">
-                        <el-form-item label="startOffset">
-                            <el-input v-model="search.startOffset" placeholder="请输入"></el-input>
-                        </el-form-item>
-                        <el-form-item label="endOffset">
-                            <el-input v-model="search.endOffset" placeholder="请输入"></el-input>
-                        </el-form-item>
                         <br>
                         <el-form-item label="keyRegex">
                             <el-input v-model="search.keyRegex" placeholder="请输入key的正则"></el-input>
@@ -228,7 +216,6 @@
             const partition = self.$route.query && self.$route.query.partition;
             console.log(self.$route.query)
             self.topic = topic;
-            self.partition = partition;
             self.bootstrap.servers = bootstrap_servers;
             self.search.bootstrap.servers = bootstrap_servers;
             self.search.topic = topic;
@@ -245,8 +232,7 @@
                 self.$http.get(self.api.getTopicPartitionEffectOffset, {
                     params: {
                         'bootstrap.servers': bootstrap_servers,
-                        'topic': topic,
-                        'partition': partition
+                        'topic': topic
                     }
                 }, function (response) {
 
@@ -278,19 +264,18 @@
             }
             ,
             searchEvent() {
-                this.getRecordByTopicPartitionOffset();
+                this.getRecordByTopic();
             },
             /**
              * 获取指定的 record
              */
-            getRecordByTopicPartitionOffset() {
+            getRecordByTopic() {
                 let self = this;
                 self.consumerRecords = [];
-                self.$http.get(self.api.getRecordByTopicPartitionOffset, {
+                self.$http.get(self.api.getRecordByTopic, {
                     params: {
                         'bootstrap.servers': self.search.bootstrap.servers,
                         'topic': self.search.topic,
-                        'partition': self.search.partition,
                         'startOffset': self.search.startOffset,
                         'endOffset': self.search.endOffset,
                         'keyRegex': self.search.keyRegex,

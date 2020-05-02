@@ -33,7 +33,8 @@ export default {
     "getTopicRealOffsetList": BASE_URL + '/ConsumeController/getTopicRealOffsetList',
     "getTopicPartitionAndRealOffsetListByTopicRegex": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetListByTopicRegex',
     "getTopicPartitionAndRealOffsetDetail": BASE_URL + '/ConsumeController/getTopicPartitionAndRealOffsetDetail',
-    "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',
+    "getRecordByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordByTopicPartitionOffset',//高级查询(Partition级别)
+    "getRecordByTopic": BASE_URL + '/ConsumeController/getRecordByTopic',//高级查询(Topic级别)
     "updatePartitionToOffset": BASE_URL + '/ConsumeController/updatePartitionToOffset',
     "getRecordEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordEChartsByTopicPartitionOffset',
     "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',//简单柱状图
