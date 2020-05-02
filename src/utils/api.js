@@ -39,6 +39,7 @@ export default {
     "getRecordSimpleEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordSimpleEChartsByTopicPartitionOffset',//简单柱状图
     "getRecordTopicSimpleEChartsByTopicOffset": BASE_URL + '/ConsumeController/getRecordTopicSimpleEChartsByTopicOffset',//简单柱状图(Topic级别)
     "getRecordLineEChartsByTopicPartitionOffset": BASE_URL + '/ConsumeController/getRecordLineEChartsByTopicPartitionOffset',//折线图
+    "getRecordLineEChartsByTopic": BASE_URL + '/ConsumeController/getRecordLineEChartsByTopic',//折线图(topic级别的)
 
 
     "getKafkaBootstrapServers": BASE_URL + '/CommonController/getKafkaBootstrapServers',

@@ -159,6 +159,7 @@
             self.search.bootstrap.servers = bootstrap_servers;
             self.topic = topic;
             self.search.topic = topic;
+            self.search.partition = partition;
             self.partition = partition;
             self.partitionEffectOffset = {};
             this.getTopicPartitionEffectOffset(bootstrap_servers, topic, partition);

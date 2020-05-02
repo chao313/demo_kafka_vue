@@ -276,13 +276,13 @@
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/TopicPartitionOffsetSimpleView" + "?" + queryStr, '_self');
+                window.open("#/TopicPartitionSimpleView" + "?" + queryStr, '_self');
             },
             routerToSeniorView(bootstrap_servers, topic, partition) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/TopicPartitionOffsetSeniorView" + "?" + queryStr, '_self');
+                window.open("#/TopicPartitionSeniorView" + "?" + queryStr, '_self');
             },
             routerToConsumerView(bootstrap_servers, topic) {
                 //跳转携带参数

@@ -146,20 +146,19 @@
             let self = this;
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
             const topic = self.$route.query && self.$route.query.topic;
-            const partition = self.$route.query && self.$route.query.partition;
             console.log(self.$route.query)
             self.bootstrap.servers = bootstrap_servers;
             self.search.bootstrap.servers = bootstrap_servers;
             self.topic = topic;
             self.search.topic = topic;
             self.topicEffectOffset = {};
-            this.getTopicEffectOffset(bootstrap_servers, topic, partition);
+            this.getTopicEffectOffset(bootstrap_servers, topic);
         }
         ,
         watch: {}
         ,
         methods: {
-            getTopicEffectOffset(bootstrap_servers, topic, partition) {
+            getTopicEffectOffset(bootstrap_servers, topic) {
                 let self = this;
                 self.$http.get(self.api.getTopicEffectOffset, {
                     params: {
@@ -238,11 +237,10 @@
              */
             lineCharts() {
                 let self = this;
-                self.$http.get(self.api.getRecordLineEChartsByTopicPartitionOffset, {
+                self.$http.get(self.api.getRecordLineEChartsByTopic, {
                     params: {
                         'bootstrap.servers': self.search.bootstrap.servers,
                         'topic': self.search.topic,
-                        'partition': self.search.partition,
                         'timeStart': self.search.timeStart,
                         'timeEnd': self.search.timeEnd,
                         'level': self.search.level,
