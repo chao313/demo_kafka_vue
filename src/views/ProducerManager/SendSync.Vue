@@ -170,7 +170,7 @@
                             console.log(response)
                             self.$message({
                                 type: 'success',
-                                message: '修改成功，页面即将跳转至列表页',
+                                message: '同步发送成功',
                                 duration: 500
                             });
                             response.content.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.timestamp));
