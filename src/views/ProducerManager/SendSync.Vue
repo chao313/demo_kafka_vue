@@ -113,11 +113,17 @@
         },
         created() {
             let self = this;
-            /**
-             * 1.接收外界参数
-             */
-            const id = this.$route.query && this.$route.query.id
-            // self.queryByPrimaryKey(id)
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topic = self.$route.query && self.$route.query.topic;
+            const partition = self.$route.query && self.$route.query.partition;
+            if (bootstrap_servers) {
+                self.postForm.bootstrap.servers = bootstrap_servers;
+                self.postForm.topic = topic;
+                if (partition) {
+                    self.postForm.partition = partition;
+                }
+            }
+
             self.msgReturnData.pop();
             this.getKafkaBootstrapServers();
         },

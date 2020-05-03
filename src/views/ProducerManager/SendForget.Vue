@@ -1,6 +1,6 @@
 <template>
     <div class="app-form mt20 ml40">
-        <h5 class="form-tit">同步发送</h5>
+        <h5 class="form-tit">发送忘记</h5>
         <section>
             <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
                      :inline-message="true">

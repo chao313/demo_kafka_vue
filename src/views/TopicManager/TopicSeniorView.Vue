@@ -2,7 +2,7 @@
     <div class="app-container">
         <div class="app-list">
             <div class="app-tab">
-                <h5 class="form-tit">Partition 的高级查看（可以过滤，可以查看内容，注意消耗性能，是逐条过滤）</h5>
+                <h5 class="form-tit">Topic(包含所有的Partition)高级查看（可以过滤，可以查看内容，注意消耗性能，是逐条过滤）</h5>
                 <hr>
                 <div class="mt20">
                     <el-form :inline="true" size="mini">

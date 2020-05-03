@@ -55,6 +55,9 @@
                             <span @click="routerToDetail(bootstrap.servers,info.topic,info.partition)">查看</span>
                             <span @click="routerToSimpleView(bootstrap.servers,info.topic,info.partition)">简单查看</span>
                             <span @click="routerToSeniorView(bootstrap.servers,info.topic,info.partition)">高级查看</span>
+                            <span @click="routerProducerManagerSendSync(bootstrap.servers,info.topic,info.partition)">发送消息</span>
+                            <span @click="routerWindManagerOriginal(bootstrap.servers,info.topic)">原始批量</span>
+                            <span @click="routerWindManagerBusiness(bootstrap.servers,info.topic)">业务批量</span>
                             <span @click="routerToConsumerView(bootstrap.servers,info.topic)">查看消费者</span>
                         </td>
                     </tr>
@@ -289,6 +292,21 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
+            },
+            routerProducerManagerSendSync(bootstrap_servers, topic, partition) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
+                window.open("#/ProducerManagerSendSync" + "?" + queryStr, '_self');
+            },
+            routerWindManagerOriginal(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/WindManagerOriginal" + "?" + queryStr, '_self');
+            },
+            routerWindManagerBusiness(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/WindManagerBusiness" + "?" + queryStr, '_self');
             },
             routerToEdit(id) {
                 //跳转携带参数

@@ -52,6 +52,9 @@
                         <td>
                             <span @click="routerToTopicSimpleView(bootstrap.servers,info.topic)">简单查看</span>
                             <span @click="routerToTopicSeniorView(bootstrap.servers,info.topic)">高级查看</span>
+                            <span @click="routerProducerManagerSendSync(bootstrap.servers,info.topic)">发送消息</span>
+                            <span @click="routerWindManagerOriginal(bootstrap.servers,info.topic)">原始批量</span>
+                            <span @click="routerWindManagerBusiness(bootstrap.servers,info.topic)">业务批量</span>
                             <span @click="routerToConsumerView(bootstrap.servers,info.topic)">查看消费者</span>
                             <span @click="routerToTopicPartitionOffsetList(bootstrap.servers,info.topic)">查看分区</span>
                             <span @click="clearTopic(bootstrap.servers,info.topic)">清空</span>
@@ -325,6 +328,21 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/TopicSeniorView" + "?" + queryStr, '_self');
+            },
+            routerProducerManagerSendSync(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ProducerManagerSendSync" + "?" + queryStr, '_self');
+            },
+            routerWindManagerOriginal(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/WindManagerOriginal" + "?" + queryStr, '_self');
+            },
+            routerWindManagerBusiness(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/WindManagerBusiness" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');

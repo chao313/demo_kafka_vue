@@ -65,7 +65,7 @@
              * 1.接收外界参数
              */
             const id = this.$route.query && this.$route.query.id
-            self.queryByPrimaryKey(id)
+            // self.queryByPrimaryKey(id)
         },
         watch: {},
         methods: {

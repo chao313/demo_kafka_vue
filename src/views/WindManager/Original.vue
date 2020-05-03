@@ -125,6 +125,17 @@
         },
         created() {
             let self = this;
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topic = self.$route.query && self.$route.query.topic;
+            const partition = self.$route.query && self.$route.query.partition;
+            if (bootstrap_servers) {
+                self.postForm.bootstrap.servers = bootstrap_servers;
+                self.postForm.topic = topic;
+                if (partition) {
+                    self.postForm.partition = partition;
+                }
+            }
+
             self.bootstrap_servers = {};
             self.msgReturnData = [];
             this.getKafkaBootstrapServers();
