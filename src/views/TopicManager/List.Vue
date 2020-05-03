@@ -60,6 +60,7 @@
                             <span @click="clearTopic(bootstrap.servers,info.topic)">清空</span>
                             <span @click="deleteByTopicName(bootstrap.servers,info.topic)">删除</span>
                             <span @click="routerToView(bootstrap.servers,info.topic)">配置查看</span>
+                            <span @click="routerTopicEditPartitionNum(bootstrap.servers,info.topic)">新增分区数量</span>
                         </td>
                     </tr>
                     </tbody>
@@ -343,6 +344,11 @@
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
                 window.open("#/WindManagerBusiness" + "?" + queryStr, '_self');
+            },
+            routerTopicEditPartitionNum(bootstrap_servers, topic) {
+                let queryStr = "";
+                queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/TopicEditPartitionNum" + "?" + queryStr, '_self');
             },
             routerToAdd() {
                 window.open("#/TBlogModuleAdd", '_self');

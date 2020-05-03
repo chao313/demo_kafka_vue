@@ -25,9 +25,38 @@
                                       :disabled="true"></el-input>
                         </el-form-item>
                     </el-form>
-                </div>
-
-                <div class="mt20">
+                    <el-form :inline="true" size="mini">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Topic-Partition</th>
+                                <th>startOffset</th>
+                                <th>endOffset</th>
+                                <th>effectOffset</th>
+                            </tr>
+                            </thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>消费的Topic分区</th>
+                                <th>最早有效的offset</th>
+                                <th>最新的offset</th>
+                                <th>有效的offset</th>
+                            </tr>
+                            <tbody>
+                            <template v-if="partitionEffectOffset.topic">
+                                <tr>
+                                    <td>1</td>
+                                    <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
+                                    <td>{{partitionEffectOffset.earliestOffset}}</td>
+                                    <td>{{partitionEffectOffset.lastOffset}}</td>
+                                    <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </table>
+                    </el-form>
+                    <br>
                     <el-form :inline="true" size="mini">
                         <el-form-item label="startOffset">
                             <el-input v-model="search.startOffset" placeholder="请输入"></el-input>
@@ -73,40 +102,9 @@
                         </el-form-item>
                     </el-form>
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Topic-Partition</th>
-                        <th>startOffset</th>
-                        <th>endOffset</th>
-                        <th>effectOffset</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>消费的Topic分区</th>
-                        <th>最早有效的offset</th>
-                        <th>最新的offset</th>
-                        <th>有效的offset</th>
-                    </tr>
-
-                    <tbody>
-                    <template v-if="partitionEffectOffset.topic">
-                        <tr>
-                            <td>1</td>
-                            <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
-                            <td>{{partitionEffectOffset.earliestOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
-                <hr>
                 <hr>
                 <h5 class="form-tit">获取指定offset数据</h5>
 

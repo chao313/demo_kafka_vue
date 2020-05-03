@@ -64,6 +64,11 @@ export default {
     "sendBusinessFile": BASE_URL + '/WindController/sendBusinessFile',
 
 
+    /**
+     * AdminPartitionController
+     */
+    "increasePartitions": BASE_URL + '/AdminPartitionController/increasePartitions',//提高分区数量
+
     /*后台的URL*/
     /** 资源管理 */
 

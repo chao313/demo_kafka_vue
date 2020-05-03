@@ -31,6 +31,8 @@ const TopicPartitionSeniorView = r => require.ensure([], () => r(require('@/view
 /** topic级别的 简单查看和 高级查看*/
 const TopicSimpleView = r => require.ensure([], () => r(require('@/views/TopicManager/TopicSimpleView')), 'TopicSimpleView')
 const TopicSeniorView = r => require.ensure([], () => r(require('@/views/TopicManager/TopicSeniorView')), 'TopicSeniorView')
+/**Topic的分区数量*/
+const TopicEditPartitionNum = r => require.ensure([], () => r(require('@/views/TopicManager/EditPartitionNum')), 'TopicEditPartitionNum')
 
 /**
  * 消费者
@@ -233,7 +235,15 @@ export const constantRouterMap = [
                     title: 'Topic高级查看'
                 },
                 hidden: true
-            }
+            }, {
+                path: 'TopicEditPartitionNum',
+                component: TopicEditPartitionNum,
+                name: 'TopicEditPartitionNum',
+                meta: {
+                    title: 'Topic分区数量'
+                },
+                hidden: false
+            },
         ]
     },
     {
