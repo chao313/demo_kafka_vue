@@ -119,7 +119,7 @@
                         <th>value</th>
                         <th>timestampType</th>
                         <th>timestamp</th>
-                        <th>leaderEpoch.value</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tr>
@@ -131,20 +131,39 @@
                         <th>value</th>
                         <th>msg的时间type</th>
                         <th>msg的时间(创建/接收)</th>
-                        <th>水位</th>
+                        <th>操作</th>
                     </tr>
                     <tbody>
+
                     <template v-if="consumerRecords">
                         <tr v-for="(info,index) in consumerRecords">
                             <td>{{index+1}}</td>
                             <td>{{info.offset}}</td>
                             <td>{{info.topic}}</td>
                             <td>{{info.partition}}</td>
-                            <td>{{info.key}}</td>
-                            <td>{{info.value}}</td>
+                            <td>
+                                <template>
+                                    {{info.key.substr(0, 30)}}
+                                </template>
+                                <template v-if="info.key.length > 30">
+                                    ...
+                                </template>
+                            </td>
+                            <td>
+                                <template>
+                                    {{info.value.substr(0, 30)}}
+                                </template>
+                                <template v-if="info.value.length > 30">
+                                    ...
+                                </template>
+                            </td>
                             <td>{{info.timestampType}}</td>
                             <td>{{info.timestamp}}</td>
-                            <td>{{info.leaderEpoch.value}}</td>
+                            <td>
+                                <span @click="showValue(info.key,info.value)">展示全部</span>
+                                <span @click="sendToSelf(bootstrap.servers,info.topic,info.partition,info.key,info.value)">转发到自己</span>
+                                <span @click="routerProducerManagerSendSync(bootstrap.servers,info.key,info.value)">转发到其他</span>
+                            </td>
                         </tr>
                     </template>
                     </tbody>
@@ -326,6 +345,52 @@
 
             }
             ,
+            /**
+             * 获取指定的 record
+             */
+            sendToSelf(bootstrap_servers, topic, partition, key, value) {
+                let self = this;
+                var params = new FormData();
+                params.append('bootstrap.servers', bootstrap_servers);
+                params.append('topic', topic);
+                params.append('partition', partition);
+                params.append('key', key);
+                params.append('value', value);
+
+                var sourceParamsJson = {};
+                params.forEach((value, key) => sourceParamsJson[key] = value);
+
+                var ParamsJson = {};
+                ParamsJson[params] = sourceParamsJson;
+
+                self.$http.get(self.api.sendSync, {
+                    params: sourceParamsJson
+                }, function (response) {
+                    if (response.code == 0) {
+                        self.$message({
+                            type: 'success',
+                            message: '发送成功',
+                            duration: 500
+                        });
+                        self.searchEvent();
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+            }
+            ,
             charts() {
                 let self = this;
                 self.$http.get(self.api.getRecordEChartsByTopicPartitionOffset, {
@@ -407,8 +472,31 @@
                 }
 
 
-            }
+            },
+            showValue(key, value) {
+                this.$confirm(value, key, {
+                    confirmButtonText: '确定',
+                    showCancelButton: false,
+                    center: true
+                }).then(() => {
 
+
+                })
+            },
+            routerProducerManagerSendSync(bootstrap_servers, key, value) {
+                let self = this;
+                self.$router.push({
+                    name: 'ProducerManagerSendSync',
+                    query: {
+                        bootstrap_servers: bootstrap_servers
+                    },
+                    params: {
+                        bootstrap_servers: bootstrap_servers,
+                        key: key,
+                        value: value,
+                    }
+                })
+            }
         }
 
     }
@@ -432,5 +520,11 @@
             color: #888;
         }
 
+    }
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>

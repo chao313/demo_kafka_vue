@@ -116,13 +116,26 @@
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
             const topic = self.$route.query && self.$route.query.topic;
             const partition = self.$route.query && self.$route.query.partition;
+            const key = self.$route.params && self.$route.params.key;
+            const value = self.$route.params && self.$route.params.value;
             if (bootstrap_servers) {
-                self.postForm.bootstrap.servers = bootstrap_servers;
-                self.postForm.topic = topic;
+                if (bootstrap_servers) {
+                    self.postForm.bootstrap.servers = bootstrap_servers;
+                }
+                if (topic) {
+                    self.postForm.topic = topic;
+                }
                 if (partition) {
                     self.postForm.partition = partition;
                 }
+                if (key) {
+                    self.postForm.key = key;
+                }
+                if (value) {
+                    self.postForm.value = value;
+                }
             }
+
 
             self.msgReturnData.pop();
             this.getKafkaBootstrapServers();
@@ -147,35 +160,38 @@
                 var ParamsJson = {};
                 ParamsJson[params] = sourceParamsJson;
 
-                self.$http.get(self.api.sendSync, {
-                    params: sourceParamsJson
-                }, function (response) {
-                    if (response.code == 0) {
-                        console.log(response)
-                        self.$message({
-                            type: 'success',
-                            message: '修改成功，页面即将跳转至列表页',
-                            duration: 500
-                        });
-                        response.content.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.timestamp));
-                        self.msgReturnData.push(response.content);
-                        self.msgReturnData = self.sortByKey(self.msgReturnData, 'timestamp');
-                    } else {
-                        self.$message({
-                            type: 'error',
-                            message: response.msg,
-                            duration: 2000
-                        });
+                self.$http.post(self.api.sendSync, params,
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }, function (response) {
+                        if (response.code == 0) {
+                            console.log(response)
+                            self.$message({
+                                type: 'success',
+                                message: '修改成功，页面即将跳转至列表页',
+                                duration: 500
+                            });
+                            response.content.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(response.content.timestamp));
+                            self.msgReturnData.push(response.content);
+                            self.msgReturnData = self.sortByKey(self.msgReturnData, 'timestamp');
+                        } else {
+                            self.$message({
+                                type: 'error',
+                                message: response.msg,
+                                duration: 2000
+                            });
 
-                    }
-                }, function (response) {
-                    //失败回调
-                    self.$message({
-                        type: 'warning',
-                        message: '请求异常',
-                        duration: 1000
-                    });
-                })
+                        }
+                    }, function (response) {
+                        //失败回调
+                        self.$message({
+                            type: 'warning',
+                            message: '请求异常',
+                            duration: 1000
+                        });
+                    })
             },
             getKafkaBootstrapServers() {
                 let self = this;

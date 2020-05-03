@@ -113,11 +113,28 @@
         },
         created() {
             let self = this;
-            /**
-             * 1.接收外界参数
-             */
-            const id = this.$route.query && this.$route.query.id
-            // self.queryByPrimaryKey(id)
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topic = self.$route.query && self.$route.query.topic;
+            const partition = self.$route.query && self.$route.query.partition;
+            const key = self.$route.params && self.$route.params.key;
+            const value = self.$route.params && self.$route.params.value;
+            if (bootstrap_servers) {
+                if (bootstrap_servers) {
+                    self.postForm.bootstrap.servers = bootstrap_servers;
+                }
+                if (topic) {
+                    self.postForm.topic = topic;
+                }
+                if (partition) {
+                    self.postForm.partition = partition;
+                }
+                if (key) {
+                    self.postForm.key = key;
+                }
+                if (value) {
+                    self.postForm.value = value;
+                }
+            }
             self.msgReturnData.pop();
             this.getKafkaBootstrapServers();
         },
@@ -141,32 +158,36 @@
                 var ParamsJson = {};
                 ParamsJson[params] = sourceParamsJson;
 
-                self.$http.get(self.api.sendForget, {
-                    params: sourceParamsJson
-                }, function (response) {
-                    if (response.code == 0) {
-                        console.log(response)
-                        self.$message({
-                            type: 'success',
-                            message: '发送忘记成功',
-                            duration: 500
-                        });
-                    } else {
-                        self.$message({
-                            type: 'error',
-                            message: response.msg,
-                            duration: 2000
-                        });
+                self.$http.post(self.api.sendForget, params,
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }, function (response) {
+                        if (response.code == 0) {
+                            console.log(response)
+                            self.$message({
+                                type: 'success',
+                                message: '发送成功',
+                                duration: 500
+                            });
+                        } else {
+                            self.$message({
+                                type: 'error',
+                                message: response.msg,
+                                duration: 2000
+                            });
 
-                    }
-                }, function (response) {
-                    //失败回调
-                    self.$message({
-                        type: 'warning',
-                        message: '请求异常',
-                        duration: 1000
-                    });
-                })
+                        }
+                    }, function (response) {
+                        //失败回调
+                        self.$message({
+                            type: 'warning',
+                            message: '请求异常',
+                            duration: 1000
+                        });
+                    })
+
             }, getKafkaBootstrapServers() {
                 let self = this;
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
