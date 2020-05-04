@@ -229,10 +229,14 @@
         computed: {
             text() {
                 return function (value) {
-                    if (value == '' || value == 0) {
+                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
                         return '100%'
                     } else {
-                        return String(value).length * 1 + 'rem'
+                        if (isNaN(value) == true) {
+                            return String(value).length * 1 + 'rem'
+                        } else {
+                            return String(value).length * 2 + 'rem'
+                        }
                     }
                 }
             }

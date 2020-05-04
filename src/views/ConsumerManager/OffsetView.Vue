@@ -4,7 +4,7 @@
             <div class="app-tab">
                 <h5 class="form-tit">Consumer偏移量挑拨</h5>
                 <hr>
-                <el-form :inline="true">
+                <el-form :inline="true" size="mini">
                     <el-form-item label="bootstrap.servers">
                         <el-input v-model="bootstrap.servers"
                                   maxlength="100"
@@ -91,10 +91,14 @@
         computed: {
             text() {
                 return function (value) {
-                    if (value == '' || value == 0) {
+                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
                         return '100%'
                     } else {
-                        return String(value).length * 1 + 'rem'
+                        if (isNaN(value) == true) {
+                            return String(value).length * 1 + 'rem'
+                        } else {
+                            return String(value).length * 2 + 'rem'
+                        }
                     }
                 }
             }

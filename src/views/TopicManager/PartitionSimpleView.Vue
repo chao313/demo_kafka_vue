@@ -26,7 +26,36 @@
                         </el-form-item>
                     </el-form>
                 </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Topic-Partition</th>
+                        <th>startOffset</th>
+                        <th>endOffset</th>
+                        <th>effectOffset</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>消费的Topic分区</th>
+                        <th>最早有效的offset</th>
+                        <th>最新的offset</th>
+                        <th>有效的offset</th>
+                    </tr>
 
+                    <tbody>
+                    <template v-if="partitionEffectOffset.topic">
+                        <tr>
+                            <td>1</td>
+                            <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
+                            <td>{{partitionEffectOffset.earliestOffset}}</td>
+                            <td>{{partitionEffectOffset.lastOffset}}</td>
+                            <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
                 <div class="mt20">
                     <el-form :inline="true" size="mini">
                         <el-form-item label="timeStart">
@@ -60,37 +89,6 @@
                         </el-form-item>
                     </el-form>
                 </div>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Topic-Partition</th>
-                        <th>startOffset</th>
-                        <th>endOffset</th>
-                        <th>effectOffset</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>消费的Topic分区</th>
-                        <th>最早有效的offset</th>
-                        <th>最新的offset</th>
-                        <th>有效的offset</th>
-                    </tr>
-
-                    <tbody>
-                    <template v-if="partitionEffectOffset.topic">
-                        <tr>
-                            <td>1</td>
-                            <td>{{partitionEffectOffset.topic}} - {{partitionEffectOffset.partition}}</td>
-                            <td>{{partitionEffectOffset.earliestOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset}}</td>
-                            <td>{{partitionEffectOffset.lastOffset - partitionEffectOffset.earliestOffset}}</td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
@@ -140,10 +138,14 @@
         computed: {
             text() {
                 return function (value) {
-                    if (value == '' || value == 0) {
+                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
                         return '100%'
                     } else {
-                        return String(value).length * 1 + 'rem'
+                        if (isNaN(value) == true) {
+                            return String(value).length * 1 + 'rem'
+                        } else {
+                            return String(value).length * 2 + 'rem'
+                        }
                     }
                 }
             }

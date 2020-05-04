@@ -93,7 +93,6 @@
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
                 <hr>
-                <hr>
                 <h5 class="form-tit">获取指定offset数据</h5>
 
                 <table>
@@ -222,11 +221,16 @@
 
         computed: {
             text() {
+
                 return function (value) {
-                    if (value == '' || value == 0) {
+                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
                         return '100%'
                     } else {
-                        return String(value).length * 1 + 'rem'
+                        if (isNaN(value) == true) {
+                            return String(value).length * 1 + 'rem'
+                        } else {
+                            return String(value).length * 2 + 'rem'
+                        }
                     }
                 }
             }
@@ -244,6 +248,7 @@
             self.search.topic = topic;
             self.search.partition = partition;
             self.partitionEffectOffset = {};
+            self.consumerRecords = [];
             this.getTopicEffectOffset(bootstrap_servers, topic, partition);
         }
         ,

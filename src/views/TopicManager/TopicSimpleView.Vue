@@ -20,7 +20,36 @@
                         </el-form-item>
                     </el-form>
                 </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Topic</th>
+                        <th>partitions</th>
+                        <th>sum</th>
+                        <th>total</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>消费的Topic</th>
+                        <th>分区数量</th>
+                        <th>有效offset</th>
+                        <th>total</th>
+                    </tr>
 
+                    <tbody>
+                    <template v-if="topicEffectOffset.topic">
+                        <tr>
+                            <td>1</td>
+                            <td>{{topicEffectOffset.topic}}</td>
+                            <td>{{topicEffectOffset.partitions}}</td>
+                            <td>{{topicEffectOffset.sum}}</td>
+                            <td>{{topicEffectOffset.total}}</td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
                 <div class="mt20">
                     <el-form :inline="true" size="mini">
                         <el-form-item label="timeStart">
@@ -54,37 +83,6 @@
                         </el-form-item>
                     </el-form>
                 </div>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Topic</th>
-                        <th>partitions</th>
-                        <th>sum</th>
-                        <th>total</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>消费的Topic</th>
-                        <th>分区数量</th>
-                        <th>有效offset</th>
-                        <th>total</th>
-                    </tr>
-
-                    <tbody>
-                    <template v-if="topicEffectOffset.topic">
-                        <tr>
-                            <td>1</td>
-                            <td>{{topicEffectOffset.topic}}</td>
-                            <td>{{topicEffectOffset.partitions}}</td>
-                            <td>{{topicEffectOffset.sum}}</td>
-                            <td>{{topicEffectOffset.total}}</td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </table>
                 <hr>
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
@@ -133,10 +131,14 @@
         computed: {
             text() {
                 return function (value) {
-                    if (value == '' || value == 0) {
+                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
                         return '100%'
                     } else {
-                        return String(value).length * 1 + 'rem'
+                        if (isNaN(value) == true) {
+                            return String(value).length * 1 + 'rem'
+                        } else {
+                            return String(value).length * 2 + 'rem'
+                        }
                     }
                 }
             }
