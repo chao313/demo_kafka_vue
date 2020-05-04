@@ -103,9 +103,6 @@
                     </el-form>
                 </div>
                 <hr>
-                <h5 class="form-tit">柱状图</h5>
-                <div id="main" style="width: 1400px;height:400px;"></div>
-                <hr>
                 <h5 class="form-tit">获取指定offset数据</h5>
 
                 <table>
@@ -169,6 +166,20 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt20">
+                <!--/** */:page-size 数一页的数量！！！-->
+                <el-pagination v-show="pageInfo.list.length > 0"
+                               background
+                               @current-change="handleCurrentChange"
+                               :current-page.sync="pageInfo.pageNum"
+                               :page-size="pageInfo.pageSize"
+                               layout="total, prev, pager, next, jumper"
+                               :total="pageInfo.total">
+                </el-pagination>
+            </div>
+            <hr>
+            <h5 class="form-tit">柱状图</h5>
+            <div id="main" style="width: 1400px;height:400px;"></div>
         </div>
     </div>
 
@@ -218,8 +229,29 @@
                     "value": "value",
                     "key": "key",
                     "timestamp": 15865981004791
+                }]
+                ,
+                pageInfo: {
+                    "endRow": 10,
+                    "firstPage": 1,
+                    "hasNextPage": true,
+                    "hasPreviousPage": false,
+                    "isFirstPage": true,
+                    "isLastPage": false,
+                    "lastPage": 8,
+                    "list": [],
+                    "navigatePages": 8,
+                    "navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+                    "nextPage": 2,
+                    "orderBy": "18ff48aa-258e-40ef-b555-0843dfad462c",
+                    "pageNum": 1,
+                    "pageSize": 10,
+                    "pages": 1810,
+                    "prePage": 0,
+                    "size": 10,
+                    "startRow": 1,
+                    "total": 18100
                 }
-                ]
             }
         },
         mounted() {
@@ -255,6 +287,7 @@
             self.search.topic = topic;
             self.search.partition = partition;
             self.partitionEffectOffset = {};
+            self.consumerRecords = [];
             this.getTopicPartitionEffectOffset(bootstrap_servers, topic, partition);
         }
         ,
@@ -322,7 +355,8 @@
                 }, function (response) {
 
                     if (response.code == 0) {
-                        response.content.forEach(record => {
+                        self.pageInfo = response.content;
+                        response.content.list.forEach(record => {
                             record.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(record.timestamp))
                             self.consumerRecords.push(record);
                         });
@@ -500,6 +534,46 @@
                         value: value,
                     }
                 })
+            },
+            handleCurrentChange(currentChange) {
+                let self = this;
+                self.consumerRecords = [];
+                self.$http.get(self.api.getRecordByScrollId, {
+                    params: {
+                        'scrollId': self.pageInfo.orderBy,
+                        'pageNum': currentChange,
+                        'pageSize': self.pageInfo.pageSize,
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.pageInfo = response.content;
+                        response.content.list.forEach(record => {
+                            record.timestamp = self.dateFormat("YYYY-mm-dd HH:MM:SS.s", new Date(record.timestamp))
+                            self.consumerRecords.push(record);
+                        });
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
             }
         }
 
