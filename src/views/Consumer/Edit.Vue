@@ -1,160 +1,255 @@
 <template>
-    <div class="app-form mt20 ml40">
-        <h5 class="form-tit">注册配置编辑</h5>
-        <section>
-            <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
-                     :inline-message="true">
-                <div class="mt30 ml15">
-                    <el-form-item label="id：">
-                        <el-input v-model="postForm.id" maxlength="100" :disabled=true></el-input>
-                    </el-form-item>
-                    <el-form-item label="title：">
-                        <el-input v-model="postForm.title" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="img：">
-                        <el-input v-model="postForm.img" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="time：">
-                        <el-input v-model="postForm.time" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="type：">
-                        <el-input v-model="postForm.type" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="lookSum：">
-                        <el-input v-model="postForm.lookSum" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="content：">
-                        <el-input v-model="postForm.content" maxlength="100"></el-input>
-                    </el-form-item>
-                </div>
+    <div class="app-container">
+        <div class="mt20">
+            <el-form :inline="true" size="mini">
+                <el-form-item label="bootstrap.servers">
+                    <el-select v-model="bootstrap.servers" placeholder="请输入kafka地址:">
+                        <el-option v-for="(item,index) in bootstrap_servers" :key="item" :label="index"
+                                   :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="订阅的topic">
+                    <el-input v-model="topic" placeholder="请输入topic"></el-input>
+                </el-form-item>
+                <el-form-item label="groupNameContain">
+                    <el-input v-model="groupNameContain" placeholder="请输入groupNameContain"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
+                </el-form-item>
             </el-form>
-        </section>
-        <div class="mt40 ml40">
-            <el-button type="primary" @click="submitEditForm('postForm')">确定更新</el-button>
-            <el-button type="primary" class="el-button-search" @click="routerToList()">返回列表</el-button>
         </div>
+        <div class="app-list">
+            <div class="app-tab">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>group.id</th>
+                        <th>isSimpleConsumerGroup</th>
+                        <th>members</th>
+                        <th>status</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>consumer的group.id</th>
+                        <th>是否是简单消费者</th>
+                        <th>成员数量</th>
+                        <th>消费者状态</th>
+                        <th>操作</th>
+                    </tr>
+
+                    <tbody>
+                    <tr v-for="(info,index) in consumers">
+                        <td>{{index+1}}</td>
+                        <td>{{info.groupId}}</td>
+                        <td>{{info.isSimpleConsumerGroup}}</td>
+                        <td>{{info.members}}</td>
+                        <td>{{info.state}}</td>
+                        <td>
+                            <span @click="routerToView(bootstrap.servers,info.groupId)">消费者详情</span>
+                            <span @click="routerToOffsetView(bootstrap.servers,info.groupId)">Offset详情</span>
+                            <template v-if="info.state!='EMPTY'">
+                                <span @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">
+                                    <span class="red">seek</span></span>
+                            </template>
+                            <template v-else>
+                                <span class="redSpan" @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">seek</span>
+                            </template>
+                            <span @click="deleteConsumerGroup(bootstrap.servers,info.groupId)">删除</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <el-table
+                :data="consumers"
+                border
+                stripe
+                size="mini"
+                style="width: 100%">
+            <el-table-column type="selection">
+            </el-table-column>
+            <el-table-column
+                    label="序号"
+                    type="index">
+            </el-table-column>
+            <el-table-column
+                    sortable
+                    prop="groupId"
+                    label="groupId"
+            >
+            </el-table-column>
+            <el-table-column
+                    sortable
+                    prop="isSimpleConsumerGroup"
+                    label="isSimpleConsumerGroup"
+                    :formatter="formatBoolean"
+            >
+            </el-table-column>
+            <el-table-column
+                    sortable
+                    prop="members"
+                    label="members">
+            </el-table-column>
+            <el-table-column
+                    sortable
+                    prop="state"
+                    label="state">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="400"
+            >
+                <template slot-scope="scope">
+                    <el-button type="text" size="mini" @click="routerToView(bootstrap.servers,scope.row.groupId)">
+                        消费者详情
+                    </el-button>
+                    <el-button type="text" size="mini"
+                               @click="routerToOffsetView(bootstrap.servers,scope.row.groupId)">Offset详情
+                    </el-button>
+                    <template v-if="scope.row.state!='EMPTY'">
+                        <el-button type="text" size="mini">
+                            <span @click="routerToSeek(bootstrap.servers,scope.row.groupId,scope.row.state)">
+                                    <span class="red">seek</span></span></el-button>
+                    </template>
+                    <template v-else>
+                        <el-button type="text" size="mini">
+                            <span class="redSpan"
+                                  @click="routerToSeek(bootstrap.servers,scope.row.groupId,scope.row.state)">seek</span>
+                        </el-button>
+                    </template>
+                    <el-button type="text" size="mini"
+                               @click="deleteConsumerGroup(bootstrap.servers,scope.row.groupId)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="app-list">
+            <div class="app-tab">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>group.id</th>
+                        <th>isSimpleConsumerGroup</th>
+                        <th>members</th>
+                        <th>status</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>consumer的group.id</th>
+                        <th>是否是简单消费者</th>
+                        <th>成员数量</th>
+                        <th>消费者状态</th>
+                        <th>操作</th>
+                    </tr>
+
+                    <tbody>
+                    <tr v-for="(info,index) in consumers">
+                        <td>{{index+1}}</td>
+                        <td>{{info.groupId}}</td>
+                        <td>{{info.isSimpleConsumerGroup}}</td>
+                        <td>{{info.members}}</td>
+                        <td>{{info.state}}</td>
+                        <td>
+                            <span @click="routerToView(bootstrap.servers,info.groupId)">消费者详情</span>
+                            <span @click="routerToOffsetView(bootstrap.servers,info.groupId)">Offset详情</span>
+                            <template v-if="info.state!='EMPTY'">
+                                <span @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">
+                                    <span class="red">seek</span></span>
+                            </template>
+                            <template v-else>
+                                <span class="redSpan" @click="routerToSeek(bootstrap.servers,info.groupId,info.state)">seek</span>
+                            </template>
+                            <span @click="deleteConsumerGroup(bootstrap.servers,info.groupId)">删除</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
 </template>
+
 <script>
+    import {getPreDay} from '@/utils/index.js'
+
     export default {
-        name: 'moduleDetail',
-        props: {
-            isEdit: {
-                type: Boolean,
-                default: false
-            }
-        },
         data() {
             return {
-                postForm: {
-                    id: '',
-                    title: '',
-                    img: '',
-                    time: '',
-                    type: '',
-                    lookSum: '',
-                    content: ''
-                }
+                topic: null,
+                groupNameContain: null,
+                bootstrap: {
+                    servers: ''
+                },
+                bootstrap_servers: {
+                    "home": "192.168.0.105:9092"
+                },
+                consumers:
+                    [{
+                        "groupId": "consumer",
+                        "members": '',
+                        "state": "EMPTY",
+                        "isSimpleConsumerGroup": false
+                    }]
             }
-                ;
+        },
+        mounted() {
+            let self = this;
+            self.consumers = [];
         },
         created() {
             let self = this;
-            /**
-             * 1.接收外界参数
-             */
-            const id = this.$route.query && this.$route.query.id
-            // self.queryByPrimaryKey(id)
+            const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
+            const topic = self.$route.query && self.$route.query.topic;
+            const groupNameContain = self.$route.query && self.$route.query.groupNameContain;
+            if (bootstrap_servers) {
+                self.bootstrap.servers = bootstrap_servers;
+                self.topic = topic;
+                self.groupNameContain = groupNameContain;
+                self.searchEvent();
+            } else {
+                self.getKafkaBootstrapServers();
+            }
         },
         watch: {},
-        methods: {
-            //获取具体的配置
-            queryByPrimaryKey(id) {
+        methods: {//获取具体的配置
+            getAliveConsumerGroupByTopicAndGroupNameContain() {
                 let self = this;
-                self.$http.get(self.api.queryTBlogByPrimaryKey, {
-                        params: {
-                            id: id
-                        }
-                    }, function (response) {
-                        if (response.code == 0) {
-                            self.postForm = response.content;
-                            self.$message({
-                                type: 'success',
-                                message: '查询成功',
-                                duration: 2000
-                            });
-                        } else {
-                            self.$message({
-                                type: 'error',
-                                message: response.msg,
-                                duration: 2000
-                            });
-                        }
-                    },
-                    function (response) {
-                        //失败回调
-                        self.$message({
-                            type: 'warning',
-                            message: '请求异常',
-                            duration: 1000
-                        });
+                self.$http.get(self.api.getAliveConsumerGroupByTopicAndGroupNameContain, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'groupNameContain': self.groupNameContain
                     }
-                )
-            },
-
-            submitEditForm(formName) {
-                let self = this;
-                var sourceParams = new FormData();
-                var targetParams = new FormData();
-                /**
-                 * 处理外界的参数 -> 用于更新
-                 */
-                const id = this.$route.query && this.$route.query.id
-
-                sourceParams.append('title', self.postForm.title);
-                sourceParams.append('img', self.postForm.img);
-                sourceParams.append('time', self.postForm.time);
-                sourceParams.append('type', self.postForm.type);
-                sourceParams.append('lookSum', self.postForm.lookSum);
-                sourceParams.append('content', self.postForm.content);
-                targetParams.append('id', id);
-                /**
-                 * 转json
-                 */
-                var sourceParamsJson = {};
-                sourceParams.forEach((value, key) => sourceParamsJson[key] = value);
-                var targetParamsJson = {};
-                targetParams.forEach((value, key) => targetParamsJson[key] = value);
-
-                self.$http.post(self.api.updateTBlogByPrimaryKey, {
-                    "source": sourceParamsJson,
-                    "target": targetParamsJson
-                }, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                 }, function (response) {
                     if (response.code == 0) {
-                        if (response.content == true) {
-                            self.$message({
-                                type: 'success',
-                                message: '修改成功，页面即将跳转至列表页',
-                                duration: 500,
-                                onClose: function () {
-                                    self.$router.push({
-                                        path: '/TBlogModuleList'
-                                    })
-                                }
-                            });
+                        self.consumers = [];
+                        response.content.forEach(value => {
+                            let vo = {};
+                            vo['groupId'] = value.groupId;
+                            vo.members = value.members.length;
+                            vo.state = value.state;
+                            vo.isSimpleConsumerGroup = value.isSimpleConsumerGroup;
+                            self.consumers.push(vo);
+                        })
 
-                        } else {
-                            self.$message({
-                                type: 'warning',
-                                message: '修改失败',
-                                duration: 2000
-                            });
-                        }
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
                     } else {
                         self.$message({
                             type: 'error',
@@ -164,15 +259,241 @@
                     }
                 }, function (response) {
                     //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
+            },
+            getConsumerGroupByTopicAndGroupNameContain() {
+                let self = this;
+                self.$http.get(self.api.getConsumerGroupByTopicAndGroupNameContain, {
+                    params: {
+                        'bootstrap.servers': self.bootstrap.servers,
+                        'topic': self.topic,
+                        'groupNameContain': self.groupNameContain
+                    }
+                }, function (response) {
+                    if (response.code == 0) {
+                        self.consumers = [];
+                        response.content.forEach(value => {
+                            let vo = {};
+                            vo['groupId'] = value.groupId;
+                            vo.members = value.members.length;
+                            vo.state = value.state;
+                            vo.isSimpleConsumerGroup = value.isSimpleConsumerGroup;
+                            self.consumers.push(vo);
+                        })
+
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+
+
+            },
+            deleteConsumerGroup(bootstrap_servers, group) {
+                let self = this;
+                this.$confirm('是否删除该条数据？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    center: true
+                }).then(() => {
+                    self.$http.delete(self.api.deleteConsumerGroup
+                        , {
+                            params: {
+                                'bootstrap.servers': bootstrap_servers,
+                                'group': group
+                            }
+                        },
+                        function (response) {
+                            if (response.code == 0) {
+                                if (response.content == true) {
+                                    self.$message({
+                                        type: 'success',
+                                        message: '删除成功',
+                                        duration: 2000
+                                    });
+                                    self.getAliveConsumerGroupByTopicAndGroupNameContain();
+                                } else {
+                                    self.$message({
+                                        type: 'warning',
+                                        message: '删除失败',
+                                        duration: 2000
+                                    });
+
+                                }
+                            } else {
+                                self.$message({
+                                    type: 'error',
+                                    message: response.msg,
+                                    duration: 2000
+                                });
+                            }
+                        },
+                        function (response) {
+                            console.log(response);
+                            //失败回调
+                            self.$message({
+                                type: 'error',
+                                message: "请求异常",
+                                duration: 2000
+                            });
+                        }
+                    )
+
                 })
             },
-            routerToList() {
-                //跳转回List
-                window.open("#/TBlogModuleList", '_self');
+            getKafkaBootstrapServers() {
+                let self = this;
+                self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
+                    if (response.code == 0) {
+                        self.bootstrap_servers = response.content;
+                        for (var key in self.bootstrap_servers) {
+                            self.bootstrap.servers = self.bootstrap_servers[key]
+                        }
+                        self.searchEvent();
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
+            },
+            routerToView(bootstrap_servers, group_id) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerView" + "?" + queryStr, '_self');
+            },
+            routerToSeek(bootstrap_servers, group_id, state) {
+                let self = this;
+                if (state !== 'EMPTY') {
+                    self.$message({
+                        type: 'warning',
+                        message: '消费者状态不为EMPTY，无法seek',
+                        duration: 3000
+                    });
+                    return;
+                }
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                window.open("#/ConsumerManagerSeekList" + "?" + queryStr, '_self');
+            },
+            routerToOffsetView(bootstrap_servers, group_id) {
+                //跳转携带参数
+                let queryStr = "";
+                queryStr = queryStr + "group_id=" + group_id + "&bootstrap_servers=" + bootstrap_servers + "";
+                //跳转携带参数
+                window.open("#/ConsumerManagerOffsetView" + "?" + queryStr, '_self');
+            },
+            routerToAdd() {
+                window.open("#/TBlogModuleAdd", '_self');
+            },
+            searchEvent() {
+                let self = this;
+                /**
+                 * !!! 如果不为空,调用消耗性能多的
+                 */
+                if (self.topic) {
+                    self.getConsumerGroupByTopicAndGroupNameContain();
+                } else {
+                    self.getAliveConsumerGroupByTopicAndGroupNameContain();
+                }
+
+            },
+            handleClick(row) {
+                console.log(row);
+            },
+            formatBoolean: function (row, column, cellValue) {
+                var ret = ''  //你想在页面展示的值
+                if (cellValue) {
+                    ret = "是"  //根据自己的需求设定
+                } else {
+                    ret = "否"
+                }
+                return ret;
             }
         }
+
     }
 </script>
-<style rel="stylesheet/scss" lang="scss">
 
+<style rel="stylesheet/scss" lang="scss">
+    .video-detail {
+
+        p {
+            display: inline-block;
+            width: 40%;
+            vertical-align: top;
+        }
+
+        label {
+            width: 120px;
+            display: inline-block;
+        }
+
+        span {
+            color: #888;
+        }
+
+        redSpan {
+            color: #b21f2d;
+        }
+
+    }
+
+    .red {
+        color: #b21f2d !important;
+        /*font-size: 100px;*/
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 </style>

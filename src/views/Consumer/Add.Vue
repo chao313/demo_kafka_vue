@@ -1,29 +1,39 @@
 <template>
     <div class="app-form mt20 ml40">
         <h5 class="form-tit">注册配置编辑</h5>
-        <section>
-            <el-form :model="postForm" ref="postForm" label-width="180px" size="mini"
-                     :inline-message="true">
-                <div class="mt30 ml15">
-                    <el-form-item label="bootstrap.servers:">
-                        <el-input v-model="postForm.bootstrap.servers" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="topic:">
-                        <el-input v-model="postForm.topic" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="numPartitions:">
-                        <el-input v-model="postForm.numPartitions" maxlength="100"></el-input>
-                    </el-form-item>
-                    <el-form-item label="replicationFactor:">
-                        <el-input v-model="postForm.replicationFactor" maxlength="100"></el-input>
-                    </el-form-item>
-                </div>
-            </el-form>
-        </section>
-        <div class="mt40 ml40">
-            <el-button type="primary" @click="submitAddForm('postForm')">确定添加</el-button>
-            <el-button type="primary" class="el-button-search" @click="routerToList()">返回列表</el-button>
-        </div>
+        <el-table :data="tableData3" tooltip-effect="dark" style="width: 100%"  
+                  @select="selectionChange"   @selection-change="handleSelectionChange">
+
+               
+            <el-table-column type="selection" width="55">
+
+                   
+            </el-table-column>
+
+               
+            <el-table-column label="日期" width="120">
+
+                     
+                <template slot-scope="scope">{{ scope.row.date }}</template>
+
+                   
+            </el-table-column>
+
+               
+            <el-table-column prop="name" label="姓名" width="120">
+
+                   
+            </el-table-column>
+
+               
+            <el-table-column prop="address" label="地址" show-overflow-tooltip>
+
+                   
+            </el-table-column>
+
+             
+        </el-table>
+
     </div>
 
 </template>
@@ -36,68 +46,146 @@
                 default: false
             }
         },
+
         data() {
+
             return {
-                postForm: {
-                    bootstrap: {servers: '192.168.0.105:9092'},
-                    topic: '',
-                    numPartitions: 1,
-                    replicationFactor: 1
-                }
+
+                tableData3: [{
+
+                    date: '2016-05-03',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-02',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-04',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-01',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-08',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-06',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }, {
+
+                    date: '2016-05-07',
+
+                    name: '王小虎',
+
+                    address: '上海市普陀区金沙江路 1518 弄'
+
+                }],
+
+                multipleSelection: [],
+
+                a: [],
+
+                b: [],
+
             }
-        },
-        created() {
 
         },
-        watch: {},
+
         methods: {
-            submitAddForm(formName) {
-                let self = this;
-                let params = new FormData();
 
-                params.append('bootstrap.servers', self.postForm.bootstrap.servers);
-                params.append('topic', self.postForm.topic);
-                params.append('numPartitions', self.postForm.numPartitions);
-                params.append('replicationFactor', self.postForm.replicationFactor);
-                /**
-                 * 转json
-                 */
+            toggleSelection(rows) {
 
-                self.$http.post(self.api.addTopic, params, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                }, function (response) {
-                    if (response.code == 0) {
-                        if (response.content == true) {
-                            self.$message({
-                                type: 'success',
-                                message: '添加成功，页面即将跳转至列表页',
-                                duration: 500,
-                                onClose: function () {
-                                    self.$router.push({
-                                        path: '/TopicManagerList'
-                                    })
-                                }
-                            });
+                if (rows) {
 
-                        } else {
-                            self.$message({
-                                type: 'warning',
-                                message: '添加失败',
-                                duration: 2000
-                            });
-                        }
-                    }
-                }, function (response) {
-                    //失败回调
-                })
+                    rows.forEach(row => {
+
+                        this.$refs.multipleTable.toggleRowSelection(row);
+
+                    });
+
+                } else {
+
+                    this.$refs.multipleTable.clearSelection();
+
+                }
+
             },
-            routerToList() {
-                //跳转回List
-                window.open("#/TBlogModuleList", '_self');
+
+            selectionChange(selection, row) {
+
+                this.a = selection;
+
+                this.b = row;
+
+                //console.log(selection, row);
+
+                //  console.log(JSON.stringify( this.a[this.a.length-1]));
+
+                if (this.a.length === 0) {
+
+                    console.log("Un-check");
+
+                } else {
+
+                    console.log("checked");
+
+                    //console.log(this.b);
+
+                    // console.log(JSON.stringify( this.b));
+
+                    console.log("date: " + this.b.date);
+
+                    console.log();
+
+                    console.log();
+
+                    console.log();
+
+                    console.log();
+
+                }
+
+            },
+
+
+            handleSelectionChange(val) {
+
+                this.multipleSelection = val;
+
+                // console.log(JSON.stringify( this.multipleSelection[this.multipleSelection.length-1]));
+
             }
+
         }
+
     }
 </script>
 <style rel="stylesheet/scss" lang="scss">

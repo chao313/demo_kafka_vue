@@ -348,9 +348,10 @@ export const constantRouterMap = [
         redirect: '/ConsumerEdit',
         name: 'ConsumerEdit',
         meta: {
-            title: 'Consumer端'
+            title: 'el-table尝试'
         },
         noDropdown: true,
+        hidden: true,
         children: [
             {
                 path: 'ConsumerEdit',
@@ -369,7 +370,7 @@ export const constantRouterMap = [
                 meta: {
                     title: 'ConsumerAdd'
                 },
-                hidden: false
+                hidden: true
             }
 
         ]
