@@ -62,7 +62,7 @@
                     </tbody>
                 </table>
                 <hr>
-                <h5 class="form-tit">Consumer members(成员)</h5>
+                <h5 class="form-tit">Consumer members(成员 alive,已经停止的无法展示)</h5>
                 <table>
                     <thead>
                     <tr>
