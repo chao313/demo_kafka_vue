@@ -78,8 +78,8 @@
                             </el-select>
                             <el-button type="primary" class="el-button-search" @click="charts()">柱状图
                             </el-button>
-                            <el-button type="primary" class="el-button-search" @click="lineCharts()">折线图
-                            </el-button>
+                            <!--<el-button type="primary" class="el-button-search" @click="lineCharts()">折线图-->
+                            <!--</el-button>-->
                         </el-form-item>
                     </el-form>
                 </div>
@@ -87,8 +87,8 @@
                 <h5 class="form-tit">柱状图</h5>
                 <div id="main" style="width: 1400px;height:400px;"></div>
                 <hr>
-                <h5 class="form-tit">折线图</h5>
-                <div id="line" style="width: 1400px;height:400px;"></div>
+                <!--<h5 class="form-tit">折线图</h5>-->
+                <!--<div id="line" style="width: 1400px;height:400px;"></div>-->
             </div>
         </div>
 
