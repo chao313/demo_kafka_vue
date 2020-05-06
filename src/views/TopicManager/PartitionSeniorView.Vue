@@ -149,16 +149,6 @@
                                 </template>
                             </td>
                             <td>
-                                <template v-if="info.key">
-                                    <template>
-                                        {{info.key.substr(0, 30)}}
-                                    </template>
-                                    <template v-if="info.key.length > 30">
-                                        ...
-                                    </template>
-                                </template>
-                            </td>
-                            <td>
                                 <template v-if="info.value">
                                     <template>
                                         {{info.value.substr(0, 30)}}
