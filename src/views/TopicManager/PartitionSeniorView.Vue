@@ -139,19 +139,33 @@
                             <td>{{info.topic}}</td>
                             <td>{{info.partition}}</td>
                             <td>
-                                <template>
-                                    {{info.key.substr(0, 30)}}
-                                </template>
-                                <template v-if="info.key.length > 30">
-                                    ...
+                                <template v-if="info.key">
+                                    <template>
+                                        {{info.key.substr(0, 30)}}
+                                    </template>
+                                    <template v-if="info.key.length > 30">
+                                        ...
+                                    </template>
                                 </template>
                             </td>
                             <td>
-                                <template>
-                                    {{info.value.substr(0, 30)}}
+                                <template v-if="info.key">
+                                    <template>
+                                        {{info.key.substr(0, 30)}}
+                                    </template>
+                                    <template v-if="info.key.length > 30">
+                                        ...
+                                    </template>
                                 </template>
-                                <template v-if="info.value.length > 30">
-                                    ...
+                            </td>
+                            <td>
+                                <template v-if="info.value">
+                                    <template>
+                                        {{info.value.substr(0, 30)}}
+                                    </template>
+                                    <template v-if="info.value.length > 30">
+                                        ...
+                                    </template>
                                 </template>
                             </td>
                             <td>{{info.timestampType}}</td>
@@ -261,7 +275,7 @@
         computed: {
             text() {
                 return function (value) {
-                    if (value == '' || value == 0 || value == 1 || typeof(value) == 'number') {
+                    if (value == '' || value == 0 || value == 1 || typeof (value) == 'number') {
                         return '100%'
                     } else {
                         if (isNaN(value) == true) {
