@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <div class="mt20">
+        <div class="mt10">
             <el-form :inline="true" size="mini">
                 <el-form-item label="bootstrap.servers">
                     <el-select v-model="bootstrap.servers" placeholder="请输入kafka地址:">
@@ -27,7 +27,6 @@
                         <th>partition</th>
                         <th>earliestOffset</th>
                         <th>lastOffset</th>
-                        <th>earliestTimestamp</th>
                         <th>sum</th>
                         <th>操作</th>
                     </tr>
@@ -39,7 +38,6 @@
                         <th>最早有效的offset</th>
                         <th>最新的offset</th>
                         <th>有效的记录数量</th>
-                        <th>最早的时间</th>
                         <th>操作</th>
                     </tr>
                     <tbody>
@@ -49,8 +47,12 @@
                         <td>{{info.partition}}</td>
                         <td>{{info.earliestOffset}}</td>
                         <td>{{info.lastOffset}}</td>
-                        <td>{{info.sum}}</td>
-                        <td>{{info.earliestTimestamp}}</td>
+                        <template v-if="info.sum > 0">
+                            <td class="span_blue">{{info.sum}}</td>
+                        </template>
+                        <template v-else>
+                            <td>{{info.sum}}</td>
+                        </template>
                         <td>
                             <span @click="routerToDetail(bootstrap.servers,info.topic,info.partition)">查看</span>
                             <span @click="routerToSimpleView(bootstrap.servers,info.topic,info.partition)">简单查看</span>
@@ -63,6 +65,17 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="mt10">
+                <!--/** */:page-size  数一页的数量！！！-->
+                <el-pagination v-show="pageInfo.list.length > 0"
+                               background
+                               @current-change="handleCurrentChange"
+                               :current-page.sync="pageInfo.pageNum"
+                               :page-size="pageInfo.pageSize"
+                               layout="total, prev, pager, next, jumper"
+                               :total="pageInfo.total">
+                </el-pagination>
             </div>
         </div>
 
@@ -92,7 +105,28 @@
                     "sum": 53,
                     "earliestTimestamp": null,
                     "lastTimestamp": null
-                }]
+                }],
+                pageInfo: {
+                    "endRow": 10,
+                    "firstPage": 1,
+                    "hasNextPage": true,
+                    "hasPreviousPage": false,
+                    "isFirstPage": true,
+                    "isLastPage": false,
+                    "lastPage": 8,
+                    "list": [],
+                    "navigatePages": 8,
+                    "navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+                    "nextPage": 2,
+                    "orderBy": "18ff48aa-258e-40ef-b555-0843dfad462c",
+                    "pageNum": 1,
+                    "pageSize": 10,
+                    "pages": 1810,
+                    "prePage": 0,
+                    "size": 10,
+                    "startRow": 1,
+                    "total": 18100
+                }
             }
         },
         mounted() {
@@ -160,7 +194,8 @@
                     }
                 }, function (response) {
                     if (response.code == 0) {
-                        self.topicPartitionAndRealOffset = response.content;
+                        self.pageInfo = response.content;
+                        self.topicPartitionAndRealOffset = response.content.list;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -320,6 +355,41 @@
             },
             searchEvent() {
                 this.getTopicPartitionAndRealOffsetList();
+            },
+            handleCurrentChange(currentChange) {
+                let self = this;
+                // self.topicPartitionAndRealOffset = [];
+                self.$http.get(self.api.getRecordByScrollId, {
+                    params: {
+                        'scrollId': self.pageInfo.orderBy,
+                        'pageNum': currentChange,
+                        'pageSize': self.pageInfo.pageSize,
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.pageInfo = response.content;
+                        self.topicPartitionAndRealOffset = response.content.list;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
             }
 
         }
@@ -345,5 +415,9 @@
             color: #888;
         }
 
+    }
+
+    .span_blue {
+        color: #007bff !important;
     }
 </style>

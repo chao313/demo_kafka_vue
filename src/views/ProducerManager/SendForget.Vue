@@ -22,10 +22,10 @@
                         <el-input v-model="postForm.timestamp" maxlength="100"></el-input>
                     </el-form-item>
                     <el-form-item label="key:">
-                        <el-input v-model="postForm.key" maxlength="100"></el-input>
+                        <el-input v-model="postForm.key" ></el-input>
                     </el-form-item>
                     <el-form-item label="value：">
-                        <el-input type="textarea" v-model="postForm.value" maxlength="10000"></el-input>
+                        <el-input type="textarea" v-model="postForm.value" ></el-input>
                     </el-form-item>
                 </div>
             </el-form>

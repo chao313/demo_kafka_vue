@@ -27,7 +27,6 @@
                     <tr>
                         <th>id</th>
                         <th>group.id</th>
-                        <th>isSimpleConsumerGroup</th>
                         <th>members</th>
                         <th>status</th>
                         <th>操作</th>
@@ -36,7 +35,6 @@
                     <tr>
                         <th>序号</th>
                         <th>consumer的group.id</th>
-                        <th>是否是简单消费者</th>
                         <th>成员数量</th>
                         <th>消费者状态</th>
                         <th>操作</th>
@@ -46,7 +44,6 @@
                     <tr v-for="(info,index) in consumers">
                         <td>{{index+1}}</td>
                         <td>{{info.groupId}}</td>
-                        <td>{{info.isSimpleConsumerGroup}}</td>
                         <td>{{info.members}}</td>
                         <td>{{info.state}}</td>
                         <td>
@@ -64,6 +61,17 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="mt10">
+                <!--/** */:page-size  数一页的数量！！！-->
+                <el-pagination v-show="pageInfo.list.length > 0"
+                               background
+                               @current-change="handleCurrentChange"
+                               :current-page.sync="pageInfo.pageNum"
+                               :page-size="pageInfo.pageSize"
+                               layout="total, prev, pager, next, jumper"
+                               :total="pageInfo.total">
+                </el-pagination>
             </div>
         </div>
 
@@ -91,7 +99,28 @@
                         "members": '',
                         "state": "EMPTY",
                         "isSimpleConsumerGroup": false
-                    }]
+                    }],
+                pageInfo: {
+                    "endRow": 10,
+                    "firstPage": 1,
+                    "hasNextPage": true,
+                    "hasPreviousPage": false,
+                    "isFirstPage": true,
+                    "isLastPage": false,
+                    "lastPage": 8,
+                    "list": [],
+                    "navigatePages": 8,
+                    "navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+                    "nextPage": 2,
+                    "orderBy": "18ff48aa-258e-40ef-b555-0843dfad462c",
+                    "pageNum": 1,
+                    "pageSize": 10,
+                    "pages": 1810,
+                    "prePage": 0,
+                    "size": 10,
+                    "startRow": 1,
+                    "total": 18100
+                }
             }
         },
         mounted() {
@@ -124,7 +153,8 @@
                 }, function (response) {
                     if (response.code == 0) {
                         self.consumers = [];
-                        response.content.forEach(value => {
+                        self.pageInfo = response.content;
+                        response.content.list.forEach(value => {
                             let vo = {};
                             vo['groupId'] = value.groupId;
                             vo.members = value.members.length;
@@ -167,7 +197,8 @@
                 }, function (response) {
                     if (response.code == 0) {
                         self.consumers = [];
-                        response.content.forEach(value => {
+                        self.pageInfo = response.content;
+                        response.content.list.forEach(value => {
                             let vo = {};
                             vo['groupId'] = value.groupId;
                             vo.members = value.members.length;
@@ -323,6 +354,49 @@
                     self.getAliveConsumerGroupByTopicAndGroupNameContain();
                 }
 
+            },
+            handleCurrentChange(currentChange) {
+                let self = this;
+                // self.topicPartitionAndRealOffset = [];
+                self.$http.get(self.api.getRecordByScrollId, {
+                    params: {
+                        'scrollId': self.pageInfo.orderBy,
+                        'pageNum': currentChange,
+                        'pageSize': self.pageInfo.pageSize,
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.consumers = [];
+                        self.pageInfo = response.content;
+                        response.content.list.forEach(value => {
+                            let vo = {};
+                            vo['groupId'] = value.groupId;
+                            vo.members = value.members.length;
+                            vo.state = value.state;
+                            vo.isSimpleConsumerGroup = value.isSimpleConsumerGroup;
+                            self.consumers.push(vo);
+                        })
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
             }
 
         }

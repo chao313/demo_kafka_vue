@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <div class="mt20">
+        <div class="mt10">
             <el-form :inline="true" size="mini">
                 <el-form-item label="bootstrap.servers">
                     <el-select v-model="bootstrap.servers" placeholder="请输入kafka地址:">
@@ -25,9 +25,8 @@
                         <th>id</th>
                         <th>name</th>
                         <th>partitions</th>
-                        <th>sum</th>
                         <th>total</th>
-                        <th>earliestTimestamp</th>
+                        <th>sum</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -35,9 +34,8 @@
                         <th>序号</th>
                         <th>Topic的name</th>
                         <th>分区数量</th>
-                        <th>有效offset数量</th>
                         <th>total</th>
-                        <th>最早的时间</th>
+                        <th>有效offset数量</th>
                         <th>操作</th>
                     </tr>
 
@@ -46,9 +44,13 @@
                         <td>{{index+1}}</td>
                         <td>{{info.topic}}</td>
                         <td>{{info.partitions}}</td>
-                        <td>{{info.sum}}</td>
                         <td>{{info.total}}</td>
-                        <td>{{info.earliestTimestamp}}</td>
+                        <template v-if="info.sum > 0">
+                            <td class="span_blue">{{info.sum}}</td>
+                        </template>
+                        <template v-else>
+                            <td>{{info.sum}}</td>
+                        </template>
                         <td>
                             <span @click="routerToTopicSimpleView(bootstrap.servers,info.topic)">简单查看</span>
                             <span @click="routerToTopicSeniorView(bootstrap.servers,info.topic)">高级查看</span>
@@ -65,7 +67,17 @@
                     </tr>
                     </tbody>
                 </table>
-                <p v-show="topicsResults.size == 0" class="no-data-tip">没有找到相关数据！</p>
+            </div>
+            <div class="mt10">
+                <!--/** */:page-size 数一页的数量！！！-->
+                <el-pagination v-show="pageInfo.list.length > 0"
+                               background
+                               @current-change="handleCurrentChange"
+                               :current-page.sync="pageInfo.pageNum"
+                               :page-size="pageInfo.pageSize"
+                               layout="total, prev, pager, next, jumper"
+                               :total="pageInfo.total">
+                </el-pagination>
             </div>
         </div>
 
@@ -112,7 +124,29 @@
                         "total": 0,
                         "earliestTimestamp": null
                     }
-                ]
+                ],
+
+                pageInfo: {
+                    "endRow": 10,
+                    "firstPage": 1,
+                    "hasNextPage": true,
+                    "hasPreviousPage": false,
+                    "isFirstPage": true,
+                    "isLastPage": false,
+                    "lastPage": 8,
+                    "list": [],
+                    "navigatePages": 8,
+                    "navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+                    "nextPage": 2,
+                    "orderBy": "18ff48aa-258e-40ef-b555-0843dfad462c",
+                    "pageNum": 1,
+                    "pageSize": 10,
+                    "pages": 1810,
+                    "prePage": 0,
+                    "size": 10,
+                    "startRow": 1,
+                    "total": 18100
+                }
             }
         },
         mounted() {
@@ -147,7 +181,8 @@
                     }
                 }, function (response) {
                     if (response.code == 0) {
-                        self.topicsResults = response.content;
+                        self.pageInfo = response.content;
+                        self.topicsResults = response.content.list;
                         self.$message({
                             type: 'success',
                             message: '查询成功',
@@ -366,6 +401,41 @@
                 self.search.lookSum = '';
                 self.search.content = '';
                 this.queryBase();
+            },
+            handleCurrentChange(currentChange) {
+                let self = this;
+                self.consumerRecords = [];
+                self.$http.get(self.api.getRecordByScrollId, {
+                    params: {
+                        'scrollId': self.pageInfo.orderBy,
+                        'pageNum': currentChange,
+                        'pageSize': self.pageInfo.pageSize,
+                    }
+                }, function (response) {
+
+                    if (response.code == 0) {
+                        self.pageInfo = response.content;
+                        self.topicsResults = response.content.list;
+                        self.$message({
+                            type: 'success',
+                            message: '查询成功',
+                            duration: 2000
+                        });
+                    } else {
+                        self.$message({
+                            type: 'error',
+                            message: response.msg,
+                            duration: 2000
+                        });
+                    }
+                }, function (response) {
+                    //失败回调
+                    self.$message({
+                        type: 'warning',
+                        message: '请求异常',
+                        duration: 1000
+                    });
+                })
             }
 
         }
@@ -391,5 +461,9 @@
             color: #888;
         }
 
+    }
+
+    .span_blue {
+        color: #007bff !important;
     }
 </style>

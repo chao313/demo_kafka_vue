@@ -7,7 +7,7 @@
                 <div class="mt30 ml15">
                     <el-form-item label="bootstrap.servers">
                         <el-select v-model="postForm.bootstrap.servers" placeholder="请输入kafka地址:">
-                            <el-option v-for="(item,index) in bootstrap_servers" :key="item" :label="index"
+                            <el-option v-for="(item,index) in bootstrap_servers" :key="index" :label="index"
                                        :value="item">
                             </el-option>
                         </el-select>
@@ -22,10 +22,10 @@
                         <el-input v-model="postForm.timestamp" maxlength="100"></el-input>
                     </el-form-item>
                     <el-form-item label="key:">
-                        <el-input v-model="postForm.key" maxlength="100"></el-input>
+                        <el-input v-model="postForm.key" ></el-input>
                     </el-form-item>
                     <el-form-item label="value：">
-                        <el-input type="textarea" v-model="postForm.value" maxlength="10000"></el-input>
+                        <el-input type="textarea" v-model="postForm.value"></el-input>
                     </el-form-item>
                 </div>
             </el-form>
@@ -138,6 +138,7 @@
 
 
             self.msgReturnData.pop();
+            self.bootstrap_servers={};
             this.getKafkaBootstrapServers();
         },
         watch: {},
@@ -195,7 +196,7 @@
             },
             getKafkaBootstrapServers() {
                 let self = this;
-                self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
+                self.$http.get(self.api.getAllKafkaBootstrapServers, {}, function (response) {
                     if (response.code == 0) {
                         self.bootstrap_servers = response.content;
                         self.$message({
