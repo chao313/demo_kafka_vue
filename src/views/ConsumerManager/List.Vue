@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-        <div class="mt20">
+        <div class="mt10">
             <el-form :inline="true" size="mini">
                 <el-form-item label="bootstrap.servers">
                     <el-select v-model="bootstrap.servers" placeholder="请输入kafka地址:">

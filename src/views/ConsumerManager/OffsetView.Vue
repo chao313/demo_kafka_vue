@@ -24,29 +24,29 @@
                     <tr>
                         <th>id</th>
                         <th>Topic-Partition</th>
-                        <th>offset</th>
                         <th>startOffset</th>
                         <th>endOffset</th>
-                        <th>effectOffset</th>
+                        <th>offset</th>
+                        <th>NoConsumerOffset</th>
                     </tr>
                     </thead>
                     <tr>
                         <th>序号</th>
                         <th>消费的Topic分区</th>
-                        <th>消费的offset</th>
                         <th>最早有效的offset</th>
                         <th>最新的offset</th>
-                        <th>有效的offset</th>
+                        <th>消费的offset</th>
+                        <th>剩余的offset</th>
                     </tr>
                     <tbody>
                     <template v-for="(value,key,index) in consumerGroupOffsetsAndRealOffset">
                         <tr>
                             <td>{{index+1}}</td>
                             <td>{{key}}</td>
-                            <td>{{value.offsetAndMetadata.offset}}</td>
                             <td>{{value.startOffset}}</td>
                             <td>{{value.endOffset}}</td>
-                            <td>{{value.endOffset - value.startOffset }}</td>
+                            <td>{{value.offsetAndMetadata.offset}}</td>
+                            <td>{{value.endOffset  - value.offsetAndMetadata.offset}}</td>
                         </tr>
                     </template>
                     </tbody>
