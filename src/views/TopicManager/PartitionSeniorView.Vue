@@ -100,6 +100,23 @@
                             <el-button type="primary" class="el-button-search" @click="charts()">柱状图
                             </el-button>
                         </el-form-item>
+                        <hr>
+                        <el-form-item>
+                            <el-button type="primary" class="el-button-search" @click="searchEvent()">快捷查询(按数量)
+                            </el-button>
+                            <el-select v-model="search.level" placeholder="选择level:">
+                                <el-option v-for=" item in level" :key="item" :label="item"
+                                           :value="item">
+                                </el-option>
+                            </el-select>
+                            <el-button type="primary" class="el-button-search" @click="searchEvent()">快捷查询(按时间)
+                            </el-button>
+                            <el-select v-model="search.level" placeholder="选择level:">
+                                <el-option v-for=" item in level" :key="item" :label="item"
+                                           :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-form>
                 </div>
                 <hr>
@@ -207,6 +224,7 @@
                     topic: null
                 },
                 level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
+                number: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},
