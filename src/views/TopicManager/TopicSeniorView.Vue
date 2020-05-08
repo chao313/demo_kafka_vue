@@ -78,6 +78,27 @@
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-form :inline="true" size="mini">
+                        <el-form-item>
+                            <el-form-item label="quickNumber">
+                                <el-input v-model="search.quickNumber" placeholder="请输入数量"></el-input>
+                            </el-form-item>
+                            <el-button type="primary" class="el-button-search" @click="searchEvent()">按照最新数量查询
+                            </el-button>
+                            <br>
+                            <el-form-item label="quickTime">
+                                <el-input v-model="search.quickTime" placeholder="请输入"></el-input>
+                            </el-form-item>
+                            <el-select v-model="search.quickTimeLevel" placeholder="选择level:">
+                                <el-option v-for=" item in quickTimeLevel" :key="item" :label="item"
+                                           :value="item">
+                                </el-option>
+                            </el-select>
+                            <el-button type="primary" class="el-button-search" @click="searchEvent()">按照最新时间查询
+                            </el-button>
+                            <hr>
                             <el-select v-model="search.level" placeholder="选择level:">
                                 <el-option v-for=" item in level" :key="item" :label="item"
                                            :value="item">
@@ -196,6 +217,7 @@
                     total: 0
                 },
                 level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
+                quickTimeLevel: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},
@@ -206,7 +228,10 @@
                     valueRegex: null,
                     timeStart: null,
                     timeEnd: null,
-                    level: 'DAY'
+                    level: 'DAY',
+                    quickNumber: null,
+                    quickTime: null,
+                    quickTimeLevel: 'MINUTES'
 
                 },
                 consumerRecords: [{
@@ -339,7 +364,10 @@
                         'keyRegex': self.search.keyRegex,
                         'valueRegex': self.search.valueRegex,
                         'timeStart': self.search.timeStart,
-                        'timeEnd': self.search.timeEnd
+                        'timeEnd': self.search.timeEnd,
+                        'quickNumber': self.search.quickNumber,
+                        'quickTime': self.search.quickTime,
+                        'quickTimeLevel': self.search.quickTimeLevel
                     }
                 }, function (response) {
 
