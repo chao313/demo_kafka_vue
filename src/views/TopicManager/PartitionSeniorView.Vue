@@ -89,34 +89,36 @@
                                     value-format="yyyy-MM-dd HH:mm:ss"
                                     placeholder="选择日期的end时间">
                             </el-date-picker>
-                        </el-form-item>
-                        <el-form-item>
                             <el-button type="primary" class="el-button-search" @click="searchEvent()">查询</el-button>
-                            <el-select v-model="search.level" placeholder="选择level:">
-                                <el-option v-for=" item in level" :key="item" :label="item"
-                                           :value="item">
-                                </el-option>
-                            </el-select>
-                            <el-button type="primary" class="el-button-search" @click="charts()">柱状图
-                            </el-button>
                         </el-form-item>
-                        <hr>
-                        <el-form-item>
-                            <el-button type="primary" class="el-button-search" @click="searchEvent()">快捷查询(按数量)
-                            </el-button>
-                            <el-select v-model="search.level" placeholder="选择level:">
-                                <el-option v-for=" item in level" :key="item" :label="item"
-                                           :value="item">
-                                </el-option>
-                            </el-select>
-                            <el-button type="primary" class="el-button-search" @click="searchEvent()">快捷查询(按时间)
-                            </el-button>
-                            <el-select v-model="search.level" placeholder="选择level:">
-                                <el-option v-for=" item in level" :key="item" :label="item"
-                                           :value="item">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                        <el-form :inline="true" size="mini">
+                            <el-form-item>
+                                <el-form-item label="quickNumber">
+                                    <el-input v-model="search.quickNumber" placeholder="请输入数量"></el-input>
+                                </el-form-item>
+                                <el-button type="primary" class="el-button-search" @click="searchEvent()">按照最新数量查询
+                                </el-button>
+                                <br>
+                                <el-form-item label="quickTime">
+                                    <el-input v-model="search.quickTime" placeholder="请输入"></el-input>
+                                </el-form-item>
+                                <el-select v-model="search.quickTimeLevel" placeholder="选择level:">
+                                    <el-option v-for=" item in quickTimeLevel" :key="item" :label="item"
+                                               :value="item">
+                                    </el-option>
+                                </el-select>
+                                <el-button type="primary" class="el-button-search" @click="searchEvent()">按照最新时间查询
+                                </el-button>
+                                <hr>
+                                <el-select v-model="search.level" placeholder="选择level:">
+                                    <el-option v-for=" item in level" :key="item" :label="item"
+                                               :value="item">
+                                    </el-option>
+                                </el-select>
+                                <el-button type="primary" class="el-button-search" @click="charts()">柱状图
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
                     </el-form>
                 </div>
                 <hr>
@@ -224,7 +226,7 @@
                     topic: null
                 },
                 level: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
-                number: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
+                quickTimeLevel: ['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTES', 'SECONDS'],
                 search: {
                     bootstrap: {servers: '192.168.0.105:9092'},
                     topic: {},
@@ -235,7 +237,10 @@
                     valueRegex: null,
                     timeStart: null,
                     timeEnd: null,
-                    level: 'DAY'
+                    level: 'DAY',
+                    quickNumber: null,
+                    quickTime: null,
+                    quickTimeLevel: 'MINUTES'
 
                 },
                 consumerRecords: [{
@@ -372,7 +377,10 @@
                         'keyRegex': self.search.keyRegex,
                         'valueRegex': self.search.valueRegex,
                         'timeStart': self.search.timeStart,
-                        'timeEnd': self.search.timeEnd
+                        'timeEnd': self.search.timeEnd,
+                        'quickNumber': self.search.quickNumber,
+                        'quickTime': self.search.quickTime,
+                        'quickTimeLevel': self.search.quickTimeLevel
                     }
                 }, function (response) {
 
@@ -559,7 +567,6 @@
             },
             handleCurrentChange(currentChange) {
                 let self = this;
-                self.consumerRecords = [];
                 self.$http.get(self.api.getRecordByScrollId, {
                     params: {
                         'scrollId': self.pageInfo.orderBy,
@@ -567,7 +574,7 @@
                         'pageSize': self.pageInfo.pageSize,
                     }
                 }, function (response) {
-
+                    self.consumerRecords = [];
                     if (response.code == 0) {
                         self.pageInfo = response.content;
                         response.content.list.forEach(record => {
