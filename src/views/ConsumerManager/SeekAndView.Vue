@@ -195,6 +195,7 @@
             self.group_id = group_id;
             self.topic = topic;
             self.search.topic = topic;
+            self.search.partition = partition;
             self.partition = partition;
             this.getConsumerGroupOffsetsAndRealOffsetByTopicAndPartition(bootstrap_servers, group_id, topic, partition);
         }
