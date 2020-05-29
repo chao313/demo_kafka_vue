@@ -176,11 +176,11 @@
 
                     if (response.code == 0) {
                         self.clusterInfo = response.content;
-                        self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 1000
-                        });
+                        // self.$message({
+                        //     type: 'success',
+                        //     message: '查询成功',
+                        //     duration: 1000
+                        // });
                     } else {
                         self.$message({
                             type: 'error',
@@ -208,11 +208,11 @@
 
                     if (response.code == 0) {
                         self.topicSize = response.content;
-                        self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 1000
-                        });
+                        // self.$message({
+                        //     type: 'success',
+                        //     message: '查询成功',
+                        //     duration: 1000
+                        // });
                     } else {
                         self.$message({
                             type: 'error',
@@ -240,11 +240,11 @@
 
                     if (response.code == 0) {
                         self.consumerSize = response.content;
-                        self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 1000
-                        });
+                        // self.$message({
+                        //     type: 'success',
+                        //     message: '查询成功',
+                        //     duration: 1000
+                        // });
                     } else {
                         self.$message({
                             type: 'error',
