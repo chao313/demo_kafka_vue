@@ -308,50 +308,50 @@
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/TopicPartitionOffsetDetail" + "?" + queryStr, '_self');
+                window.open("#/TopicPartitionOffsetDetail" + "?" + queryStr, '_blank');
             },
             routerToSimpleView(bootstrap_servers, topic, partition) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/TopicPartitionSimpleView" + "?" + queryStr, '_self');
+                window.open("#/TopicPartitionSimpleView" + "?" + queryStr, '_blank');
             },
             routerToSeniorView(bootstrap_servers, topic, partition) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/TopicPartitionSeniorView" + "?" + queryStr, '_self');
+                window.open("#/TopicPartitionSeniorView" + "?" + queryStr, '_blank');
             },
             routerToConsumerView(bootstrap_servers, topic) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/ConsumerManagerList" + "?" + queryStr, '_self');
+                window.open("#/ConsumerManagerList" + "?" + queryStr, '_blank');
             },
             routerProducerManagerSendSync(bootstrap_servers, topic, partition) {
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "&partition=" + partition + "";
-                window.open("#/ProducerManagerSendSync" + "?" + queryStr, '_self');
+                window.open("#/ProducerManagerSendSync" + "?" + queryStr, '_blank');
             },
             routerWindManagerOriginal(bootstrap_servers, topic) {
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/WindManagerOriginal" + "?" + queryStr, '_self');
+                window.open("#/WindManagerOriginal" + "?" + queryStr, '_blank');
             },
             routerWindManagerBusiness(bootstrap_servers, topic) {
                 let queryStr = "";
                 queryStr = queryStr + "topic=" + topic + "&bootstrap_servers=" + bootstrap_servers + "";
-                window.open("#/WindManagerBusiness" + "?" + queryStr, '_self');
+                window.open("#/WindManagerBusiness" + "?" + queryStr, '_blank');
             },
             routerToEdit(id) {
                 //跳转携带参数
                 let queryStr = "";
                 queryStr = queryStr + "id=" + id + "";
                 //跳转携带参数
-                window.open("#/TBlogModuleEdit" + "?" + queryStr, '_self');
+                window.open("#/TBlogModuleEdit" + "?" + queryStr, '_blank');
             },
             routerToAdd() {
-                window.open("#/TBlogModuleAdd", '_self');
+                window.open("#/TBlogModuleAdd", '_blank');
             },
             searchEvent() {
                 this.getTopicPartitionAndRealOffsetList();

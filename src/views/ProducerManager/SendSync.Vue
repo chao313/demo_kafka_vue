@@ -22,7 +22,7 @@
                         <el-input v-model="postForm.timestamp" maxlength="100"></el-input>
                     </el-form-item>
                     <el-form-item label="key:">
-                        <el-input v-model="postForm.key" ></el-input>
+                        <el-input v-model="postForm.key"></el-input>
                     </el-form-item>
                     <el-form-item label="value：">
                         <el-input type="textarea" v-model="postForm.value"></el-input>
@@ -116,8 +116,8 @@
             const bootstrap_servers = self.$route.query && self.$route.query.bootstrap_servers;
             const topic = self.$route.query && self.$route.query.topic;
             const partition = self.$route.query && self.$route.query.partition;
-            const key = self.$route.params && self.$route.params.key;
-            const value = self.$route.params && self.$route.params.value;
+            const key = self.$route.query && self.$route.query.key;
+            const uuid = self.$route.query && self.$route.query.uuid;
             if (bootstrap_servers) {
                 if (bootstrap_servers) {
                     self.postForm.bootstrap.servers = bootstrap_servers;
@@ -131,14 +131,22 @@
                 if (key) {
                     self.postForm.key = key;
                 }
-                if (value) {
-                    self.postForm.value = value;
+                if (uuid) {
+                        self.postForm.value = sessionStorage[uuid];
+                }
+            } else {
+                if (key) {
+                    self.postForm.key = key;
+                }
+                if (topic) {
+                    self.postForm.topic = topic;
+                }
+                if (uuid) {
+                    self.postForm.value = sessionStorage[uuid];
                 }
             }
-
-
             self.msgReturnData.pop();
-            self.bootstrap_servers={};
+            self.bootstrap_servers = {};
             this.getKafkaBootstrapServers();
         },
         watch: {},
