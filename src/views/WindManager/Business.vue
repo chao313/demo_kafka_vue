@@ -201,11 +201,11 @@
                         for (var key in self.bootstrap_servers) {
                             self.postForm.bootstrap.servers = self.bootstrap_servers[key]
                         }
-                        self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 2000
-                        });
+                        // self.$message({
+                        //     type: 'success',
+                        //     message: '查询成功',
+                        //     duration: 1000
+                        // });
                     } else {
                         self.$message({
                             type: 'error',

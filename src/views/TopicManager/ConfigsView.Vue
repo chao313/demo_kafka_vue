@@ -115,7 +115,7 @@
                         self.$message({
                             type: 'success',
                             message: '查询成功',
-                            duration: 2000
+                            duration: 1000
                         });
                     } else {
                         self.$message({
@@ -191,11 +191,11 @@
                 self.$http.get(self.api.getKafkaBootstrapServers, {}, function (response) {
                     if (response.code == 0) {
                         self.bootstrap_servers = response.content;
-                        self.$message({
-                            type: 'success',
-                            message: '查询成功',
-                            duration: 2000
-                        });
+                        // self.$message({
+                        //     type: 'success',
+                        //     message: '查询成功',
+                        //     duration: 1000
+                        // });
                     } else {
                         self.$message({
                             type: 'error',
